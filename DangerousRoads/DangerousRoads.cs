@@ -21,9 +21,15 @@ namespace DangerousRoads
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private const int BackBufferWidth = 500;
+        private const int BackBufferHeight = 600;
+
         public DangerousRoads()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = BackBufferWidth;
+            graphics.PreferredBackBufferHeight = BackBufferHeight;
+
             Content.RootDirectory = "Content";
         }
 
