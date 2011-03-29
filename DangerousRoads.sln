@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangerousRoads", "DangerousRoads\DangerousRoads.csproj", "{F8BC4C1A-B93F-40F7-94F2-D8F72FFD4363}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8BC4C1A-B93F-40F7-94F2-D8F72FFD4363}.Debug|x86.ActiveCfg = Debug|x86
+		{F8BC4C1A-B93F-40F7-94F2-D8F72FFD4363}.Debug|x86.Build.0 = Debug|x86
+		{F8BC4C1A-B93F-40F7-94F2-D8F72FFD4363}.Release|x86.ActiveCfg = Release|x86
+		{F8BC4C1A-B93F-40F7-94F2-D8F72FFD4363}.Release|x86.Build.0 = Release|x86
+		{212A380B-EAC6-4C8D-A25E-4C84A9F657FD}.Debug|x86.ActiveCfg = Debug|x86
+		{212A380B-EAC6-4C8D-A25E-4C84A9F657FD}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
