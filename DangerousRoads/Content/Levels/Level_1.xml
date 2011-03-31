@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<XnaContent>
+    <Asset Type="LevelDataLibrary.LevelData">
+      <Name>Level 1: Slightly dangerous</Name>
+        <NumberOfLanes>8</NumberOfLanes>
+        <Length>100</Length>
+        <Speed>60</Speed>
+        <CarProbability>20</CarProbability>
+        <CarSwitchLanesProbability>10</CarSwitchLanesProbability>
+        <OilLeakProbability>10</OilLeakProbability>
+        <RoadBlockProbability>5</RoadBlockProbability>
+        <TruckProbability>10</TruckProbability>
+    </Asset>
+</XnaContent>

@@ -1,0 +1,6 @@
+D:\projekts\dr\DangerousRoads\LevelDataLibrary\bin\x86\Debug\LevelDataLibrary.dll
+D:\projekts\dr\DangerousRoads\LevelDataLibrary\bin\x86\Debug\LevelDataLibrary.pdb
+D:\projekts\dr\DangerousRoads\LevelDataLibrary\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\projekts\dr\DangerousRoads\LevelDataLibrary\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\projekts\dr\DangerousRoads\LevelDataLibrary\obj\x86\Debug\LevelDataLibrary.dll
+D:\projekts\dr\DangerousRoads\LevelDataLibrary\obj\x86\Debug\LevelDataLibrary.pdb
