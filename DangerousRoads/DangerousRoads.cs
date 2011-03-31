@@ -21,8 +21,12 @@ namespace DangerousRoads
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-
+        // global resources
         SpriteFont hudFont;
+        Texture2D players_car;
+        Texture2D car1, car2, car3;
+        
+        
         private const int BackBufferWidth = 500;
         private const int BackBufferHeight = 600;
 
@@ -59,6 +63,7 @@ namespace DangerousRoads
 
             // TODO: use this.Content to load your game content here
             hudFont = Content.Load<SpriteFont>("gui_font");
+            players_car = Content.Load<Texture2D>("Sprites/players_car");
         }
 
         /// <summary>
@@ -97,9 +102,19 @@ namespace DangerousRoads
             // TODO: Add your drawing code here
 
             // drawing code
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            
             DrawHud();
+            
+            // draw the player's car
+            Rectangle tileSafeArea = GraphicsDevice.Viewport.TitleSafeArea;
+            Vector2 player_position = new Vector2(tileSafeArea.Width / 2, tileSafeArea.Height-100);
+            spriteBatch.Draw(players_car, player_position, Color.White);
+            
             spriteBatch.End();
+
+
+
 
             base.Draw(gameTime);
         }
