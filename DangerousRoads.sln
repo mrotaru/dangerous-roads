@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangerousRoads", "DangerousRoads\DangerousRoads.csproj", "{F8BC4C1A-B93F-40F7-94F2-D8F72FFD4363}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelDataLibrary", "LevelDataLibrary\LevelDataLibrary.csproj", "{E81CA9FC-814F-4A7D-BD83-79B877BB3E83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,6 +17,12 @@ Global
 		{F8BC4C1A-B93F-40F7-94F2-D8F72FFD4363}.Release|x86.Build.0 = Release|x86
 		{212A380B-EAC6-4C8D-A25E-4C84A9F657FD}.Debug|x86.ActiveCfg = Debug|x86
 		{212A380B-EAC6-4C8D-A25E-4C84A9F657FD}.Release|x86.ActiveCfg = Release|x86
+		{E81CA9FC-814F-4A7D-BD83-79B877BB3E83}.Debug|x86.ActiveCfg = Debug|x86
+		{E81CA9FC-814F-4A7D-BD83-79B877BB3E83}.Debug|x86.Build.0 = Debug|x86
+		{E81CA9FC-814F-4A7D-BD83-79B877BB3E83}.Release|x86.ActiveCfg = Release|x86
+		{E81CA9FC-814F-4A7D-BD83-79B877BB3E83}.Release|x86.Build.0 = Release|x86
+		{AB6D2BE1-0176-4D3A-AAEC-C997BD9B5C84}.Debug|x86.ActiveCfg = Debug|x86
+		{AB6D2BE1-0176-4D3A-AAEC-C997BD9B5C84}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

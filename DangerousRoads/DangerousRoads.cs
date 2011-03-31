@@ -21,13 +21,18 @@ namespace DangerousRoads
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        // global game variables
+        float speed = 100;
+        int lanes = 8;
+
+
         // global resources
         SpriteFont hudFont;
         Texture2D players_car;
         Texture2D car1, car2, car3;
         
         
-        private const int BackBufferWidth = 500;
+        private const int BackBufferWidth = 600;
         private const int BackBufferHeight = 600;
 
         public DangerousRoads()
@@ -64,6 +69,7 @@ namespace DangerousRoads
             // TODO: use this.Content to load your game content here
             hudFont = Content.Load<SpriteFont>("gui_font");
             players_car = Content.Load<Texture2D>("Sprites/players_car");
+            car1 = Content.Load<Texture2D>("Sprites/ai_car_1");
         }
 
         /// <summary>
@@ -97,7 +103,7 @@ namespace DangerousRoads
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.DarkGray);
 
             // TODO: Add your drawing code here
 
