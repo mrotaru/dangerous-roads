@@ -21,6 +21,8 @@ namespace DangerousRoads
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+
+        SpriteFont hudFont;
         private const int BackBufferWidth = 500;
         private const int BackBufferHeight = 600;
 
@@ -56,6 +58,7 @@ namespace DangerousRoads
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            hudFont = Content.Load<SpriteFont>("gui_font");
         }
 
         /// <summary>
@@ -93,7 +96,23 @@ namespace DangerousRoads
 
             // TODO: Add your drawing code here
 
+            // drawing code
+            spriteBatch.Begin();
+            DrawHud();
+            spriteBatch.End();
+
             base.Draw(gameTime);
+        }
+
+        private void DrawHud()
+        {
+            Rectangle titleSafeArea = GraphicsDevice.Viewport.TitleSafeArea;
+            Vector2 hudLocation = new Vector2(titleSafeArea.X, titleSafeArea.Y);
+            Vector2 center = new Vector2(titleSafeArea.X + titleSafeArea.Width / 2.0f,
+                                         titleSafeArea.Y + titleSafeArea.Height / 2.0f);
+
+            spriteBatch.DrawString(hudFont, "Hello XNA", new Vector2(1.0f, 1.0f), Color.Black);
+
         }
     }
 }
