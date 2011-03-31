@@ -38,6 +38,8 @@ namespace DangerousRoads
         private const int TargetFrameRate = 60;
         private const int BackBufferWidth = 600;
         private const int BackBufferHeight = 600;
+        public int windowHeight;
+        public int windowWidth;
 
         public DangerousRoads()
         {
@@ -59,12 +61,17 @@ namespace DangerousRoads
         /// </summary>
         protected override void Initialize()
         {
+            windowHeight = GraphicsDevice.Viewport.Height;
+            windowWidth = GraphicsDevice.Viewport.Width;
+            
             currentLevel = 0;
             totalLevels = 1;
             
             LoadNextLevel();
             
             base.Initialize();
+
+
         }
 
         /// <summary>
@@ -138,13 +145,10 @@ namespace DangerousRoads
 
             // drawing code
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
-            
+
+            level.Draw(gameTime, spriteBatch);
+
             DrawHud();
-            
-            // draw the player's car
-            Rectangle tileSafeArea = GraphicsDevice.Viewport.TitleSafeArea;
-            Vector2 player_position = new Vector2(tileSafeArea.Width / 2, tileSafeArea.Height-100);
-            spriteBatch.Draw(players_car, player_position, Color.White);
             
             spriteBatch.End();
 

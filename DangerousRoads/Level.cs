@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using LevelDataLibrary;
+using Microsoft.Xna.Framework;
 
 namespace DangerousRoads
 {
@@ -29,6 +30,13 @@ namespace DangerousRoads
         Texture2D border;
         Texture2D road;
 
+        PlayerCar playerCar;
+
+        // Level content.        
+        public ContentManager Content
+        {
+            get { return content; }
+        }
         ContentManager content;
 
         public Level(IServiceProvider serviceProvider, int level_number)
@@ -46,10 +54,19 @@ namespace DangerousRoads
             RoadBlockProbability = levelData.RoadBlockProbability;
             TruckProbability = levelData.TruckProbability;
 
-
+            playerCar = new PlayerCar(this,new Vector2(200,400));
         }
 
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            // draw road texture
 
+            // draw road borders
+            
+            playerCar.Draw(gameTime,spriteBatch);
 
-    }
+            // draw other cars
+
+        }
+   }
 }
