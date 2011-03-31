@@ -61,7 +61,9 @@ namespace DangerousRoads
         {
             currentLevel = 0;
             totalLevels = 1;
+            
             LoadNextLevel();
+            
             base.Initialize();
         }
 
@@ -88,7 +90,7 @@ namespace DangerousRoads
                 return;
             else
             {
-                // 'Level complete' screen
+                // 'Level complete' screen, if != 1
 
                 currentLevel++;
                 level = new Level(Services, currentLevel);
