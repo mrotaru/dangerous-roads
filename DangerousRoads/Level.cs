@@ -11,16 +11,16 @@ namespace DangerousRoads
     class Level
     {
 
-        String Name;
-        int NumberOfLanes;
-        int Length;
-        int Speed;
-        int CarProbability;
-        int CarSwitchLanesProbability;
-        int OilLeakProbability;
-        int RoadBlockProbability;
-        int TruckProbability;
-
+        public String Name;
+        public int NumberOfLanes;
+        public int Length;
+        public int Speed;
+        public int CarProbability;
+        public int CarSwitchLanesProbability;
+        public int OilLeakProbability;
+        public int RoadBlockProbability;
+        public int TruckProbability;
+                                   
         // size of road texture
         int roadTileWidth = 100;
         int roadTileHeight = 100;
@@ -31,10 +31,21 @@ namespace DangerousRoads
 
         ContentManager content;
 
-        public Level(IServiceProvider serviceProvider, string path)
+        public Level(IServiceProvider serviceProvider, int level_number)
         {
-            LevelData levelData = content.Load<LevelData>("Level_1");
+            content = new ContentManager(serviceProvider, "Content");
+            LevelData levelData = content.Load<LevelData>( String.Format("Levels/Level_{0}", level_number));
             
+            Name = levelData.Name;
+            NumberOfLanes = levelData.NumberOfLanes;
+            Length = levelData.Length;
+            Speed = levelData.Speed;
+            CarProbability = levelData.CarProbability;
+            CarSwitchLanesProbability = levelData.CarSwitchLanesProbability;
+            OilLeakProbability = levelData.OilLeakProbability;
+            RoadBlockProbability = levelData.RoadBlockProbability;
+            TruckProbability = levelData.TruckProbability;
+
 
         }
 

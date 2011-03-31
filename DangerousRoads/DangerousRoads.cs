@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using System.IO;
 
 namespace DangerousRoads
 {
@@ -25,13 +26,16 @@ namespace DangerousRoads
         float speed = 100;
         int lanes = 8;
 
+        Level level;
+        int currentLevel;
+        int totalLevels;
 
         // global resources
         SpriteFont hudFont;
         Texture2D players_car;
         Texture2D car1, car2, car3;
-        
-        
+
+        private const int TargetFrameRate = 60;
         private const int BackBufferWidth = 600;
         private const int BackBufferHeight = 600;
 
@@ -42,6 +46,9 @@ namespace DangerousRoads
             graphics.PreferredBackBufferHeight = BackBufferHeight;
 
             Content.RootDirectory = "Content";
+
+            TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / TargetFrameRate);
+
         }
 
         /// <summary>
@@ -52,8 +59,9 @@ namespace DangerousRoads
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            currentLevel = 0;
+            totalLevels = 1;
+            LoadNextLevel();
             base.Initialize();
         }
 
@@ -66,11 +74,30 @@ namespace DangerousRoads
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // fonts
             hudFont = Content.Load<SpriteFont>("gui_font");
+            
+            // textures
             players_car = Content.Load<Texture2D>("Sprites/players_car");
             car1 = Content.Load<Texture2D>("Sprites/ai_car_1");
         }
+
+        private void LoadNextLevel()
+        {
+            if (currentLevel == totalLevels)
+                return;
+            else
+            {
+                // 'Level complete' screen
+
+                currentLevel++;
+                level = new Level(Services, currentLevel);
+
+                // reset player position 
+            }
+
+        }
+
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -119,9 +146,6 @@ namespace DangerousRoads
             
             spriteBatch.End();
 
-
-
-
             base.Draw(gameTime);
         }
 
@@ -132,7 +156,7 @@ namespace DangerousRoads
             Vector2 center = new Vector2(titleSafeArea.X + titleSafeArea.Width / 2.0f,
                                          titleSafeArea.Y + titleSafeArea.Height / 2.0f);
 
-            spriteBatch.DrawString(hudFont, "Hello XNA", new Vector2(1.0f, 1.0f), Color.Black);
+            spriteBatch.DrawString(hudFont, level.Name, new Vector2(1.0f, 1.0f), Color.Black);
 
         }
     }
