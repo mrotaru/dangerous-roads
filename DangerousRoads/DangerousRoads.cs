@@ -80,15 +80,10 @@ namespace DangerousRoads
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // fonts
             hudFont = Content.Load<SpriteFont>("gui_font");
             
-            // textures
-            players_car = Content.Load<Texture2D>("Sprites/players_car");
-            car1 = Content.Load<Texture2D>("Sprites/ai_car_1");
+            // textures - loaded by the Level's 'LoadContent'
         }
 
         private void LoadNextLevel()
@@ -144,9 +139,13 @@ namespace DangerousRoads
             // TODO: Add your drawing code here
 
             // drawing code
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
-            level.Draw(gameTime, spriteBatch);
+            level.Draw(gameTime, windowWidth, windowHeight,GraphicsDevice);
+
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
 
             DrawHud();
             

@@ -27,9 +27,20 @@ namespace DangerousRoads
         int roadTileHeight = 100;
 
         // textures
-        Texture2D border;
-        Texture2D road;
-
+        public Texture2D BorderTexture
+        {
+            get { return borderTexture; }
+            set { borderTexture = value; }
+        }
+        Texture2D borderTexture;
+        
+        public Texture2D RoadTexture
+        {
+            get { return roadTexture; }
+            set { roadTexture = value; }
+        }
+        Texture2D roadTexture;
+        
         PlayerCar playerCar;
 
         // Level content.        
@@ -54,19 +65,51 @@ namespace DangerousRoads
             RoadBlockProbability = levelData.RoadBlockProbability;
             TruckProbability = levelData.TruckProbability;
 
+            LoadContent();
             playerCar = new PlayerCar(this,new Vector2(200,400));
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void LoadContent()
+        {
+            roadTexture = content.Load<Texture2D>("Sprites/road1");
+        }
+
+
+        public void Draw(GameTime gameTime, int windowWidth, int windowHeight,GraphicsDevice GraphicsDevice)
         {
             // draw road texture
+            int road_widht = NumberOfLanes * roadTileWidth;
+            Rectangle destRect = new Rectangle( (windowWidth-road_widht)/2, 0, road_widht, windowHeight);
+            
+            SpriteBatch roadTiledSprite = new SpriteBatch(GraphicsDevice);
+            roadTiledSprite.Begin(SpriteBlendMode.AlphaBlend,
+               SpriteSortMode.Immediate, SaveStateMode.None);
+            GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
+            GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+
+            roadTiledSprite.Draw(
+                roadTexture,
+                new Vector2((windowWidth-road_widht)/2,0),
+                destRect,
+                Color.White,
+                0,
+                Vector2.Zero,
+                1.0f,
+                SpriteEffects.None,
+                1.0f);
+
+            roadTiledSprite.End();
+
 
             // draw road borders
-            
-            playerCar.Draw(gameTime,spriteBatch);
 
+
+            SpriteBatch spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            playerCar.Draw(gameTime,spriteBatch);
+            spriteBatch.End();
             // draw other cars
 
         }
-   }
+    }
 }

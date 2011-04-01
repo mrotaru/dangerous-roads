@@ -68,7 +68,6 @@ namespace DangerousRoads
         internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // draw the player's car
-            Vector2 player_position = new Vector2( 200 , 400 );
             spriteBatch.Draw(texture, position, Color.White);
            
         }
