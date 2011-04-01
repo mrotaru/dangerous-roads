@@ -79,11 +79,12 @@ namespace DangerousRoads
         {
             // draw road texture
             int road_widht = NumberOfLanes * roadTileWidth;
-            Rectangle destRect = new Rectangle( (windowWidth-road_widht)/2, 0, road_widht, windowHeight);
+            Rectangle destRect = new Rectangle( (windowWidth-road_widht)/2-0, 0, road_widht, windowHeight);
             
             SpriteBatch roadTiledSprite = new SpriteBatch(GraphicsDevice);
-            roadTiledSprite.Begin(SpriteBlendMode.AlphaBlend,
+            roadTiledSprite.Begin(SpriteBlendMode.None,
                SpriteSortMode.Immediate, SaveStateMode.None);
+            
             GraphicsDevice.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
             GraphicsDevice.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
 
@@ -93,7 +94,7 @@ namespace DangerousRoads
                 destRect,
                 Color.White,
                 0,
-                Vector2.Zero,
+                new Vector2(0,0),
                 1.0f,
                 SpriteEffects.None,
                 1.0f);
@@ -107,9 +108,11 @@ namespace DangerousRoads
             SpriteBatch spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             playerCar.Draw(gameTime,spriteBatch);
-            spriteBatch.End();
-            // draw other cars
 
+            // draw other cars
+            
+            
+            spriteBatch.End();
         }
     }
 }

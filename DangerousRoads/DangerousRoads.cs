@@ -36,7 +36,7 @@ namespace DangerousRoads
         Texture2D car1, car2, car3;
 
         private const int TargetFrameRate = 60;
-        private const int BackBufferWidth = 600;
+        private const int BackBufferWidth = 800;
         private const int BackBufferHeight = 600;
         public int windowHeight;
         public int windowWidth;
@@ -134,7 +134,7 @@ namespace DangerousRoads
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkGray);
+            GraphicsDevice.Clear(Color.ForestGreen);
 
             // TODO: Add your drawing code here
 
