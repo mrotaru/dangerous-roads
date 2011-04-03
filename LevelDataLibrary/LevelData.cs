@@ -19,6 +19,7 @@ namespace LevelDataLibrary
        public int NumberOfLanes;
        public int Length;
        public int Speed;
+       public int StartFuel;
        public int CarProbability;
        public int CarSwitchLanesProbability;
        public int OilLeakProbability;

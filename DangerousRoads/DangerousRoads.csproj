@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AICar.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="PlayerCar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

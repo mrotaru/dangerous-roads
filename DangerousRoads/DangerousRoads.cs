@@ -23,9 +23,7 @@ namespace DangerousRoads
         SpriteBatch spriteBatch;
 
         // global game variables
-        float speed = 100;
-        int lanes = 8;
-
+ 
         Level level;
         int currentLevel;
         int totalLevels;
@@ -95,7 +93,7 @@ namespace DangerousRoads
                 // 'Level complete' screen, if != 1
 
                 currentLevel++;
-                level = new Level(Services, currentLevel);
+                level = new Level(Services, currentLevel, windowWidth, windowHeight);
 
                 // reset player position 
             }
@@ -124,6 +122,7 @@ namespace DangerousRoads
                 this.Exit();
 
             // TODO: Add your update logic here
+            level.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -134,11 +133,9 @@ namespace DangerousRoads
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            GameTime startRender;
+
             GraphicsDevice.Clear(Color.ForestGreen);
-
-            // TODO: Add your drawing code here
-
-            // drawing code
 
             level.Draw(gameTime, windowWidth, windowHeight,GraphicsDevice);
 
@@ -162,6 +159,7 @@ namespace DangerousRoads
                                          titleSafeArea.Y + titleSafeArea.Height / 2.0f);
 
             spriteBatch.DrawString(hudFont, level.Name, new Vector2(1.0f, 1.0f), Color.Black);
+            spriteBatch.DrawString(hudFont, "Fuel: " + level.playerCar.FuelRemaining.ToString(), new Vector2(1.0f, 20.0f), Color.Black);
 
         }
     }

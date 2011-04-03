@@ -1,5 +1,8 @@
-DangerousRoads/DangerousRoads.csproj.user
-DangerousRoads/bin/
-DangerousRoads/obj/
-DangerousRoads/Content/obj/
+LevelDataLibrary/obj/x86/*
+LevelDataLibrary/bin/x86/*
+DangerousRoads/bin/x86/*
+DangerousRoads/obj/x86/*
 DangerousRoads/DangerousRoads.csproj.Debug.cachefile
+DangerousRoads/Content/obj/x86
+DangerousRoads/DangerousRoads.csproj.user
+LevelDataLibrary/Content/obj/x86
