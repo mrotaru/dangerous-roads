@@ -126,17 +126,17 @@ namespace DangerousRoads
 
         private void UpdateItems(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void UpdateAiCars(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void OnExitReached()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void OnPlayerKilled()

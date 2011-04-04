@@ -89,6 +89,7 @@ namespace DangerousRoads
             Speed = 100;
             lastFuelUnitTime = 0;
             isSpinning = false;
+            isAlive = true;
         }
 
         public void LoadContent()
