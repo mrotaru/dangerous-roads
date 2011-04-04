@@ -17,7 +17,7 @@ namespace LevelDataLibrary
     {
        public String Name;
        public int NumberOfLanes;
-       public int Length;
+       public float Length;
        public int Speed;
        public int StartFuel;
        public int CarProbability;

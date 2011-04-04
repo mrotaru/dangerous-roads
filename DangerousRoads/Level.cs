@@ -15,7 +15,7 @@ namespace DangerousRoads
 
         public String Name;
         public int NumberOfLanes;
-        public int Length;
+        public float Length;
         public int Speed;
         public int StartFuel;
         public int CarProbability;
@@ -28,17 +28,22 @@ namespace DangerousRoads
 
         public int screenWidth;
         public int screenHeight;
+        int playerCarDrawingOffset = 20;
+        int timeToCheckNewCars = 3;//seconds
+        int timeSinceLastCheckNewCars = 0;
 
         // portion of the road currently being rendered
-        float startY;
-        float endY;
+        public float startY;
+        public float endY;
 
-        int playerCarDrawingOffset = 20;
-
+        public List<AICar> AICars = new List<AICar>();
+        
         Rectangle RoadRect;
         // size of road texture
         int roadTileWidth = 100;
         int roadTileHeight = 100;
+
+        private Random random = new Random(354668); // Arbitrary, but constant seed
 
         // textures
         public Texture2D BorderTexture
@@ -75,7 +80,7 @@ namespace DangerousRoads
             
             Name = levelData.Name;
             NumberOfLanes = levelData.NumberOfLanes;
-            Length = levelData.Length;
+            Length = levelData.Length*25*1000;
             Speed = levelData.Speed;
             StartFuel = levelData.StartFuel;
             CarProbability = levelData.CarProbability;
@@ -85,7 +90,7 @@ namespace DangerousRoads
             TruckProbability = levelData.TruckProbability;
 
             LoadContent();
-            playerCar = new PlayerCar(this,new Vector2(200,400));
+            playerCar = new PlayerCar(this,new Vector2(200,Length));
             ReachedFinish = false;
         }
 
@@ -93,6 +98,20 @@ namespace DangerousRoads
         {
             startY = playerCar.Position.Y - (screenHeight - (playerCar.BoundingBox.Height + playerCarDrawingOffset));
             endY = startY + screenHeight;
+
+            // new cars ?
+            int k = random.Next(1, 100);
+            if (k <= CarProbability && timeSinceLastCheckNewCars >= timeToCheckNewCars*1000)
+            {
+                AICars.Add(new AICar(this, new Vector2(200, startY - screenHeight - 50), 100));
+                //global::System.Windows.Forms.MessageBox.Show(k.ToString() + "\nCreated a car at " + ((AICar)AICars.ElementAt(0)).position.ToString() +
+                //    "\nTotal cars: " + AICars.Count +
+                //    "\nstartY: " + startY);
+                timeSinceLastCheckNewCars = 0;
+            }
+            else
+                timeSinceLastCheckNewCars += gameTime.ElapsedGameTime.Milliseconds;
+
 
             // Pause while the player is dead or time is expired.
             if (!playerCar.IsAlive || playerCar.FuelRemaining == 0)
@@ -121,7 +140,18 @@ namespace DangerousRoads
                     )
                     OnPlayerKilled();
 
-                UpdateAiCars(gameTime);
+                // eliminate cars not in view and below
+                for (int i = 0; i < AICars.Count; i++)
+                {
+                    AICar car = AICars.ElementAt(i);
+                    if (car.position.Y >= (startY + car.boundingBox.Height) && car.position.Y <= endY)
+                        AICars.Remove(car);
+                }
+
+                foreach (AICar car in AICars)
+                {
+                    car.Update(gameTime);
+                }
 
                 // The player has reached the exit if they are standing on the ground and
                 // his bounding rectangle contains the center of the exit tile. They can only
@@ -135,11 +165,6 @@ namespace DangerousRoads
         }
 
         private void UpdateItems(GameTime gameTime)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void UpdateAiCars(GameTime gameTime)
         {
             //throw new NotImplementedException();
         }
@@ -166,7 +191,7 @@ namespace DangerousRoads
             Rectangle destRect = new Rectangle( (windowWidth-road_width)/2-0, 0, road_width, windowHeight);
 
             // draw the tiles
-            for (int i = -1; i < destRect.Height / roadTileHeight; i++)
+            for (int i = 0; i < destRect.Height / roadTileHeight+1; i++)
                 for (int j = 0; j < destRect.Width / roadTileWidth; j++)
                 {
                     spriteBatch.Draw(RoadTexture,
@@ -179,10 +204,14 @@ namespace DangerousRoads
                                      Color.White);
                 }
 
-            playerCar.Draw(gameTime,spriteBatch,new Vector2(playerCar.Position.X, 500));
-
             // draw other cars
+            foreach (AICar car in AICars)
+            {
+                
+                car.Draw(spriteBatch,new Vector2(car.position.X,startY-car.position.Y));
+            }
             
+            playerCar.Draw(gameTime, spriteBatch, new Vector2(playerCar.Position.X, 500));
         }
     }
 }
