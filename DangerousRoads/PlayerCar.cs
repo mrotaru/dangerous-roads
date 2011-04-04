@@ -86,7 +86,7 @@ namespace DangerousRoads
             this.position = position;
             FuelRemaining = level.StartFuel;
             LoadContent();
-            Speed = 100;
+            Speed = 200;
             lastFuelUnitTime = 0;
             isSpinning = false;
             isAlive = true;
@@ -126,12 +126,7 @@ namespace DangerousRoads
             position.X += movement * LateralSpeed * elapsed;
             position.Y -= Speed * elapsed;
 
-
-
             HandleCollisions();
-
-
-
         }
 
         private void GetInput()
@@ -156,6 +151,11 @@ namespace DangerousRoads
             {
                 movement = 1.0f;
             }
+
+            if (gamePadState.IsButtonDown(Buttons.DPadUp) || keyboardState.IsKeyDown(Keys.Up))
+                Speed = 400;
+            else Speed = 200;
+
 
         }
 
