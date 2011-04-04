@@ -78,6 +78,9 @@ namespace DangerousRoads
         /// </summary>
         protected override void LoadContent()
         {
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            
             // fonts
             hudFont = Content.Load<SpriteFont>("gui_font");
             
@@ -137,12 +140,9 @@ namespace DangerousRoads
 
             GraphicsDevice.Clear(Color.ForestGreen);
 
-            level.Draw(gameTime, windowWidth, windowHeight,GraphicsDevice);
+            spriteBatch.Begin();
 
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            level.Draw(gameTime, spriteBatch, windowWidth, windowHeight,GraphicsDevice);
 
             DrawHud();
             
