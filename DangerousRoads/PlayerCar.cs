@@ -14,7 +14,7 @@ namespace DangerousRoads
 
         private const float Acceleration = 14000.0f;
         private const float MaxSpeed = 2000.0f;
-        private const float LateralSpeed = 2000.0f;
+        private const float LateralSpeed = 200.0f;
         
         private const float MoveStickScale = 1.0f;
 
@@ -123,7 +123,7 @@ namespace DangerousRoads
 
             Vector2 previousPosition = Position;
 
-            position.X += movement * 100 * elapsed;
+            position.X += movement * LateralSpeed * elapsed;
             position.Y -= Speed * elapsed;
 
 
@@ -173,10 +173,10 @@ namespace DangerousRoads
             isAlive = true;
         }
 
-        internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        internal void Draw(GameTime gameTime, SpriteBatch spriteBatch,Vector2 drawPosition)
         {
             // draw the player's car
-            spriteBatch.Draw(texture, position, Color.White);
+            spriteBatch.Draw(texture, drawPosition, Color.White);
            
         }
     }

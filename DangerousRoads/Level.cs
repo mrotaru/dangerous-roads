@@ -33,6 +33,8 @@ namespace DangerousRoads
         float startY;
         float endY;
 
+        int playerCarDrawingOffset = 20;
+
         Rectangle RoadRect;
         // size of road texture
         int roadTileWidth = 100;
@@ -89,6 +91,9 @@ namespace DangerousRoads
 
         public void Update(GameTime gameTime)
         {
+            startY = playerCar.Position.Y - (screenHeight - (playerCar.BoundingBox.Height + playerCarDrawingOffset));
+            endY = startY + screenHeight;
+
             // Pause while the player is dead or time is expired.
             if (!playerCar.IsAlive || playerCar.FuelRemaining == 0)
             {
@@ -107,11 +112,12 @@ namespace DangerousRoads
             {
                 playerCar.Update(gameTime);
 
+
                 UpdateItems(gameTime);
 
                 // Hitting the road border while the car is spinning is fatal
                 if (playerCar.isSpinning && 
-                    (playerCar.Position.X+playerCar.BoundingBox.X) < NumberOfLanes*roadTileWidth
+                    (playerCar.Position.X + playerCar.BoundingBox.X) < NumberOfLanes*roadTileWidth
                     )
                     OnPlayerKilled();
 
@@ -160,14 +166,20 @@ namespace DangerousRoads
             Rectangle destRect = new Rectangle( (windowWidth-road_width)/2-0, 0, road_width, windowHeight);
 
             // draw the tiles
-            for (int i = 0; i < destRect.Height / roadTileHeight; i++)
+            for (int i = -1; i < destRect.Height / roadTileHeight; i++)
                 for (int j = 0; j < destRect.Width / roadTileWidth; j++)
+                {
                     spriteBatch.Draw(RoadTexture,
-                                     new Rectangle(destRect.X + j*roadTileWidth, destRect.Y + i*roadTileHeight,roadTileWidth,roadTileHeight),
+                                     new Rectangle(
+                                         destRect.X + j * roadTileWidth,  
+                                         destRect.Y + i * roadTileHeight - (int)(startY % roadTileHeight), 
+                                         roadTileWidth, 
+                                         roadTileHeight
+                                         ),
                                      Color.White);
+                }
 
-
-            playerCar.Draw(gameTime,spriteBatch);
+            playerCar.Draw(gameTime,spriteBatch,new Vector2(playerCar.Position.X, 500));
 
             // draw other cars
             
