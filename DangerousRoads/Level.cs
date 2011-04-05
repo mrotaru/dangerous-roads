@@ -20,6 +20,8 @@ namespace DangerousRoads
         public int StartFuel;
         public int CarProbability;
         public int CarSwitchLanesProbability;
+        public int CarMinSpeed;
+        public int CarMaxSpeed;
         public int OilLeakProbability;
         public int RoadBlockProbability;
         public int TruckProbability;
@@ -89,6 +91,8 @@ namespace DangerousRoads
             StartFuel = levelData.StartFuel;
             CarProbability = levelData.CarProbability;
             CarSwitchLanesProbability = levelData.CarSwitchLanesProbability;
+            CarMinSpeed = levelData.CarMinSpeed;
+            CarMaxSpeed = levelData.CarMaxSpeed;
             OilLeakProbability = levelData.OilLeakProbability;
             RoadBlockProbability = levelData.RoadBlockProbability;
             TruckProbability = levelData.TruckProbability;
@@ -106,13 +110,7 @@ namespace DangerousRoads
             // new cars ?
             int k = random.Next(1, 100);
             if (k <= CarProbability && timeSinceLastCheckNewCars >= timeToCheckNewCars*1000)
-            {
-                AICars.Add(new AICar(this, new Vector2(200, startY - 150), 230));
-                //global::System.Windows.Forms.MessageBox.Show(k.ToString() + "\nCreated a car at " + ((AICar)AICars.ElementAt(0)).position.ToString() +
-                //    "\nTotal cars: " + AICars.Count +
-                //    "\nstartY: " + startY);
-                timeSinceLastCheckNewCars = 0;
-            }
+                CreateCar();
             else
                 timeSinceLastCheckNewCars += gameTime.ElapsedGameTime.Milliseconds;
 
@@ -167,6 +165,21 @@ namespace DangerousRoads
                     OnExitReached();
                 }
             }
+        }
+
+        private void CreateCar()
+        {
+            // on which lane ?
+            int carWidth = 33;
+            int lane = random.Next(1, NumberOfLanes);
+            int xpos = (lane - 1) * roadTileWidth + (roadTileWidth - carWidth) / 2;
+            
+            // at which speed ?
+            int speed = random.Next(CarMinSpeed, CarMaxSpeed);
+            
+            AICars.Add(new AICar(this, new Vector2(xpos, startY - 150), speed));
+
+            timeSinceLastCheckNewCars = 0;
         }
 
         private void UpdateItems(GameTime gameTime)

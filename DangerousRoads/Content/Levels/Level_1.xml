@@ -8,6 +8,8 @@
         <StartFuel>100</StartFuel>
         <CarProbability>5</CarProbability>
         <CarSwitchLanesProbability>10</CarSwitchLanesProbability>
+        <CarMinSpeed>120</CarMinSpeed>
+        <CarMaxSpeed>240</CarMaxSpeed>
         <OilLeakProbability>10</OilLeakProbability>
         <RoadBlockProbability>5</RoadBlockProbability>
         <TruckProbability>10</TruckProbability>
