@@ -31,8 +31,8 @@ namespace DangerousRoads
         public int screenWidth;
         public int screenHeight;
         int playerCarDrawingOffset = 20;
-        int timeToCheckNewCars = 3;//seconds
-        int timeSinceLastCheckNewCars = 0;
+        int minMsBtwEval = 200; // minimum milliseconds between evaluating chances of creating new cars
+        int msSinceEval = 0;
 
         // portion of the road currently being rendered
         public float startY;
@@ -108,13 +108,18 @@ namespace DangerousRoads
             endY = startY + screenHeight;
 
             // new cars ?
-            int k = random.Next(1, 100);
-            if (k <= CarProbability && timeSinceLastCheckNewCars >= timeToCheckNewCars*1000)
-                CreateCar();
-            else
-                timeSinceLastCheckNewCars += gameTime.ElapsedGameTime.Milliseconds;
-
-
+            int r = (int)startY % 100;
+            
+            if ( r <= 10 && msSinceEval > minMsBtwEval)
+            {
+                //System.Windows.Forms.MessageBox.Show(r.ToString() + " " + msSinceEval.ToString());
+                int k = random.Next(1, 100);
+                if (k <= CarProbability)
+                    CreateCar();
+                msSinceEval = 0;
+            }
+            else msSinceEval += gameTime.ElapsedGameTime.Milliseconds;
+            
             // Pause while the player is dead or time is expired.
             if (!playerCar.IsAlive || playerCar.FuelRemaining == 0)
             {
@@ -180,7 +185,7 @@ namespace DangerousRoads
             
             AICars.Add(new AICar(this, new Vector2(xpos, startY - 150), speed));
 
-            timeSinceLastCheckNewCars = 0;
+            msSinceEval = 0;
         }
 
         private void UpdateItems(GameTime gameTime)
