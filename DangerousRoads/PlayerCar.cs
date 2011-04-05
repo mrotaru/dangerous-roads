@@ -151,11 +151,13 @@ namespace DangerousRoads
             {
                 movement = 1.0f;
             }
-
+            
             if (gamePadState.IsButtonDown(Buttons.DPadUp) || keyboardState.IsKeyDown(Keys.Up))
                 Speed = 400;
             else Speed = 200;
-
+            if (gamePadState.IsButtonDown(Buttons.DPadDown) || keyboardState.IsKeyDown(Keys.Down))
+                Speed = 100;
+            else Speed = 200;
 
         }
 

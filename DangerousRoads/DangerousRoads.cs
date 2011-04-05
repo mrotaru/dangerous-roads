@@ -27,6 +27,7 @@ namespace DangerousRoads
         Level level;
         int currentLevel;
         int totalLevels;
+        bool paused;
 
         // global resources
         SpriteFont hudFont;
@@ -39,6 +40,9 @@ namespace DangerousRoads
         public int windowHeight;
         public int windowWidth;
 
+        // keyboard
+        private int msPaused;
+
         public DangerousRoads()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -49,6 +53,8 @@ namespace DangerousRoads
 
             TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / TargetFrameRate);
 
+            paused = false;
+            msPaused = 0;
         }
 
         /// <summary>
@@ -120,14 +126,41 @@ namespace DangerousRoads
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            HandleInput(gameTime);
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
-            level.Update(gameTime);
 
-            base.Update(gameTime);
+            if (!paused)
+            {
+                level.Update(gameTime);
+                base.Update(gameTime);
+            }
+        }
+
+        private void HandleInput(GameTime gameTime)
+        {
+            // Get input state.
+            GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            if (gamePadState.IsButtonDown(Buttons.Start) ||
+                keyboardState.IsKeyDown(Keys.Space))
+            {
+                if (paused && msPaused > 300)
+                {
+                    paused = false;
+                    msPaused = 0;
+                }
+                else if (!paused && msPaused >300)
+                {
+                    paused = true;
+                    msPaused = 0;
+                }
+            }
+            msPaused += gameTime.ElapsedGameTime.Milliseconds;
         }
 
         /// <summary>
@@ -163,7 +196,8 @@ namespace DangerousRoads
             spriteBatch.DrawString(hudFont, "startY: " + level.startY + ", endY: " + level.endY, new Vector2(1.0f, 40.0f), Color.Black);
             if (level.AICars.Count() > 0)
             {
-                spriteBatch.DrawString(hudFont, "1st car pos: \n" + level.AICars.ElementAt(0).position.ToString(),
+                spriteBatch.DrawString(hudFont, "1st car pos: \n" + level.AICars.ElementAt(0).position.ToString() + ", speed: " +
+                level.AICars.ElementAt(0).speed,
                     new Vector2(1.0f, 60.0f), Color.Black);
                 spriteBatch.DrawString(hudFont, "Total cars: " + level.AICars.Count, new Vector2(1.0f, 100.0f), Color.Black);
             }

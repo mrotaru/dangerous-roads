@@ -44,7 +44,7 @@ namespace DangerousRoads
             Vector2 previousPosition = position;
 
             position.X += movement*LateralSpeed * elapsed;
-            position.Y -= speed * elapsed;
+            position.Y -= this.speed * elapsed;
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)

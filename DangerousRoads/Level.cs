@@ -208,7 +208,7 @@ namespace DangerousRoads
             foreach (AICar car in AICars)
             {
                 
-                car.Draw(spriteBatch,new Vector2(car.position.X,startY-car.position.Y));
+                car.Draw(spriteBatch,new Vector2(car.position.X,endY-car.position.Y));
             }
             
             playerCar.Draw(gameTime, spriteBatch, new Vector2(playerCar.Position.X, 500));
