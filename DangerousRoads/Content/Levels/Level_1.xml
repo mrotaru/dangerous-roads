@@ -2,11 +2,11 @@
 <XnaContent>
     <Asset Type="LevelDataLibrary.LevelData">
       <Name>Level 1: Slightly dangerous</Name>
-        <NumberOfLanes>5</NumberOfLanes>
+        <NumberOfLanes>6</NumberOfLanes>
         <Length>1</Length>
         <Speed>60</Speed>
         <StartFuel>100</StartFuel>
-        <CarProbability>10</CarProbability>
+        <CarProbability>20</CarProbability>
         <CarSwitchLanesProbability>10</CarSwitchLanesProbability>
         <CarMinSpeed>120</CarMinSpeed>
         <CarMaxSpeed>240</CarMaxSpeed>
