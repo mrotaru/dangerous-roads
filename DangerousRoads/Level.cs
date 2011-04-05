@@ -43,6 +43,10 @@ namespace DangerousRoads
         int roadTileWidth = 100;
         int roadTileHeight = 100;
 
+        // size of road border
+        int roadBorderWidth = 50;
+        int roadBorderHeight = 100;
+
         private Random random = new Random(354668); // Arbitrary, but constant seed
 
         // textures
@@ -103,7 +107,7 @@ namespace DangerousRoads
             int k = random.Next(1, 100);
             if (k <= CarProbability && timeSinceLastCheckNewCars >= timeToCheckNewCars*1000)
             {
-                AICars.Add(new AICar(this, new Vector2(200, startY - 150), 200));
+                AICars.Add(new AICar(this, new Vector2(200, startY - 150), 230));
                 //global::System.Windows.Forms.MessageBox.Show(k.ToString() + "\nCreated a car at " + ((AICar)AICars.ElementAt(0)).position.ToString() +
                 //    "\nTotal cars: " + AICars.Count +
                 //    "\nstartY: " + startY);
@@ -182,17 +186,25 @@ namespace DangerousRoads
         public void LoadContent()
         {
             roadTexture = content.Load<Texture2D>("Sprites/road1");
+            borderTexture = content.Load<Texture2D>("Sprites/road_border1");
         }
 
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, int windowWidth, int windowHeight,GraphicsDevice GraphicsDevice)
         {
-            // draw road texture
             int road_width = NumberOfLanes * roadTileWidth;
-            Rectangle destRect = new Rectangle( (windowWidth-road_width)/2-0, 0, road_width, windowHeight);
 
-            // draw the tiles
-            for (int i = 0; i < destRect.Height / roadTileHeight+1; i++)
+            
+
+
+            Rectangle destRect = new Rectangle(
+                    (windowWidth - road_width) / 2,
+                    0,
+                    road_width,
+                    windowHeight);
+
+            // draw road texture
+            for ( int i = 0; i < destRect.Height / roadTileHeight+1; i++)
                 for (int j = 0; j < destRect.Width / roadTileWidth; j++)
                 {
                     spriteBatch.Draw(RoadTexture,
@@ -204,6 +216,30 @@ namespace DangerousRoads
                                          ),
                                      Color.White);
                 }
+
+            // draw road border
+            for (int i = 0; i < windowHeight / roadBorderHeight + 1; i++)
+            {
+                // draw left border
+                spriteBatch.Draw(borderTexture,
+                 new Rectangle(
+                     (windowWidth - road_width) / 2-roadBorderWidth/2,
+                     i * roadBorderHeight - (int)(startY % roadBorderHeight),
+                     roadBorderWidth,
+                     roadBorderHeight
+                     ),
+                 Color.White);
+
+                // draw right border
+                spriteBatch.Draw(borderTexture,
+                 new Rectangle(
+                     (windowWidth - road_width) / 2 + road_width,
+                     i * roadBorderHeight - (int)(startY % roadBorderHeight),
+                     roadBorderWidth,
+                     roadBorderHeight
+                     ),
+                 Color.White);
+            }
 
             // draw other cars
             foreach (AICar car in AICars)
