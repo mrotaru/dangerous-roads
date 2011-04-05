@@ -139,6 +139,7 @@ namespace DangerousRoads
             movement = gamePadState.ThumbSticks.Left.X * MoveStickScale;
 
             // If any digital horizontal movement input is found, override the analog movement.
+            // left/right movement
             if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 keyboardState.IsKeyDown(Keys.Left) ||
                 keyboardState.IsKeyDown(Keys.A))
@@ -152,10 +153,10 @@ namespace DangerousRoads
                 movement = 1.0f;
             }
             
+            // acceleration/deceleration
             if (gamePadState.IsButtonDown(Buttons.DPadUp) || keyboardState.IsKeyDown(Keys.Up))
                 Speed = 400;
-            else Speed = 200;
-            if (gamePadState.IsButtonDown(Buttons.DPadDown) || keyboardState.IsKeyDown(Keys.Down))
+            else if (gamePadState.IsButtonDown(Buttons.DPadDown) || keyboardState.IsKeyDown(Keys.Down))
                 Speed = 100;
             else Speed = 200;
 

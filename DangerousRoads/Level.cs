@@ -144,7 +144,8 @@ namespace DangerousRoads
                 for (int i = 0; i < AICars.Count; i++)
                 {
                     AICar car = AICars.ElementAt(i);
-                    if (car.position.Y >= (startY + car.boundingBox.Height) && car.position.Y <= endY)
+                    if (car.position.Y <= (startY - car.boundingBox.Height) && 
+                        car.position.Y >= ( endY  + car.boundingBox.Height))
                         AICars.Remove(car);
                 }
 
