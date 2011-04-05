@@ -170,9 +170,10 @@ namespace DangerousRoads
         private void CreateCar()
         {
             // on which lane ?
+            int road_width = NumberOfLanes * roadTileWidth;
             int carWidth = 33;
             int lane = random.Next(1, NumberOfLanes);
-            int xpos = (lane - 1) * roadTileWidth + (roadTileWidth - carWidth) / 2;
+            int xpos = (screenWidth - road_width)/2 + (lane - 1) * roadTileWidth + (roadTileWidth - carWidth) / 2;
             
             // at which speed ?
             int speed = random.Next(CarMinSpeed, CarMaxSpeed);
