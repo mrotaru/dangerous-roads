@@ -103,7 +103,7 @@ namespace DangerousRoads
             int k = random.Next(1, 100);
             if (k <= CarProbability && timeSinceLastCheckNewCars >= timeToCheckNewCars*1000)
             {
-                AICars.Add(new AICar(this, new Vector2(200, startY - screenHeight - 50), 100));
+                AICars.Add(new AICar(this, new Vector2(200, startY - 150), 200));
                 //global::System.Windows.Forms.MessageBox.Show(k.ToString() + "\nCreated a car at " + ((AICar)AICars.ElementAt(0)).position.ToString() +
                 //    "\nTotal cars: " + AICars.Count +
                 //    "\nstartY: " + startY);
@@ -209,7 +209,7 @@ namespace DangerousRoads
             foreach (AICar car in AICars)
             {
                 
-                car.Draw(spriteBatch,new Vector2(car.position.X,endY-car.position.Y));
+                car.Draw(spriteBatch,new Vector2(car.position.X,car.position.Y-endY));
             }
             
             playerCar.Draw(gameTime, spriteBatch, new Vector2(playerCar.Position.X, 500));
