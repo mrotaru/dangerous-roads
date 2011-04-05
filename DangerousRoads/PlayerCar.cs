@@ -105,7 +105,6 @@ namespace DangerousRoads
 
             ApplyPhysics(gameTime);
 
-
             // fuel consumption
             if (lastFuelUnitTime >= FuelConsumption)
             {
@@ -164,6 +163,15 @@ namespace DangerousRoads
 
         public void HandleCollisions()
         {
+            if ( (position.X + (texture.Width - boundingBox.Width)/2 ) < level.roadX1)
+            {
+                speed = 50;
+                position.X = level.roadX1 - (texture.Width - boundingBox.Width) / 2;
+            }
+            else if(( position.X + (texture.Width - boundingBox.Width)/2 + boundingBox.Width ) > level.roadX2 )
+            {
+                position.X = level.roadX2 - ((texture.Width - boundingBox.Width)/2 + boundingBox.Width);
+            }
 
 
         }

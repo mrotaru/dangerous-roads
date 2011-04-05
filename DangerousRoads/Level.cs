@@ -37,6 +37,9 @@ namespace DangerousRoads
         // portion of the road currently being rendered
         public float startY;
         public float endY;
+        public int roadWidth;
+        public int roadX1;
+        public int roadX2;
 
         public List<AICar> AICars = new List<AICar>();
         
@@ -100,6 +103,9 @@ namespace DangerousRoads
             LoadContent();
             playerCar = new PlayerCar(this,new Vector2(200,Length));
             ReachedFinish = false;
+            roadWidth = NumberOfLanes * roadTileWidth;
+            roadX1 = (windowWidth - roadWidth) / 2;
+            roadX2 = roadX1 + roadWidth;
         }
 
         public void Update(GameTime gameTime)
@@ -212,9 +218,6 @@ namespace DangerousRoads
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, int windowWidth, int windowHeight,GraphicsDevice GraphicsDevice)
         {
             int road_width = NumberOfLanes * roadTileWidth;
-
-            
-
 
             Rectangle destRect = new Rectangle(
                     (windowWidth - road_width) / 2,
