@@ -28,6 +28,10 @@ namespace DangerousRoads
 
         public bool ReachedFinish;
 
+        public DangerousRoads game;
+
+        public SpriteFont debufInfoFont;
+
         public int screenWidth;
         public int screenHeight;
         int playerCarDrawingOffset = 20;
@@ -55,6 +59,7 @@ namespace DangerousRoads
         private Random random = new Random(354668); // Arbitrary, but constant seed
 
         // textures
+        public Texture2D SimpleTexture;
         public Texture2D BorderTexture
         {
             get { return borderTexture; }
@@ -78,10 +83,10 @@ namespace DangerousRoads
         }
         ContentManager content;
 
-        public Level(IServiceProvider serviceProvider, int level_number, int windowWidth, int windowHeight)
+        public Level(IServiceProvider serviceProvider, DangerousRoads _game, int level_number, int windowWidth, int windowHeight)
         {
             content = new ContentManager(serviceProvider, "Content");
-
+            game = _game;
             screenWidth = windowWidth;
             screenHeight = windowHeight;
 
@@ -101,6 +106,7 @@ namespace DangerousRoads
             TruckProbability = levelData.TruckProbability;
 
             LoadContent();
+            
             playerCar = new PlayerCar(this,new Vector2(200,Length));
             ReachedFinish = false;
             roadWidth = NumberOfLanes * roadTileWidth;
@@ -212,6 +218,7 @@ namespace DangerousRoads
         {
             roadTexture = content.Load<Texture2D>("Sprites/road1");
             borderTexture = content.Load<Texture2D>("Sprites/road_border1");
+            debufInfoFont = Content.Load<SpriteFont>("debugInfo");
         }
 
 

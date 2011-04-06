@@ -29,6 +29,8 @@ namespace DangerousRoads
         int totalLevels;
         bool paused;
 
+        public bool showDebugInfo;
+
         // global resources
         SpriteFont hudFont;
         Texture2D players_car;
@@ -54,6 +56,7 @@ namespace DangerousRoads
             TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / TargetFrameRate);
 
             paused = false;
+            showDebugInfo = false;
             msPaused = 0;
         }
 
@@ -89,7 +92,7 @@ namespace DangerousRoads
             
             // fonts
             hudFont = Content.Load<SpriteFont>("gui_font");
-            
+                        
             // textures - loaded by the Level's 'LoadContent'
         }
 
@@ -102,7 +105,7 @@ namespace DangerousRoads
                 // 'Level complete' screen, if != 1
 
                 currentLevel++;
-                level = new Level(Services, currentLevel, windowWidth, windowHeight);
+                level = new Level(Services, this,currentLevel, windowWidth, windowHeight);
 
                 // reset player position 
             }
@@ -161,6 +164,12 @@ namespace DangerousRoads
                 }
             }
             msPaused += gameTime.ElapsedGameTime.Milliseconds;
+
+            if( keyboardState.IsKeyDown(Keys.D))
+                showDebugInfo=!showDebugInfo;
+
+            if (keyboardState.IsKeyDown(Keys.Escape))
+                this.Exit();
         }
 
         /// <summary>

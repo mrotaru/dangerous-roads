@@ -25,6 +25,18 @@ namespace DangerousRoads
 
 
         public int FuelRemaining;
+
+        public Rectangle BoundingRectangle
+        {
+            get
+            {
+                int left = (int)position.X + (texture.Width  - boundingBox.Width ) / 2;
+                int top =  (int)position.Y + (texture.Height - boundingBox.Height) / 2;
+
+                return new Rectangle(left, top, boundingBox.Width, boundingBox.Height);
+            }
+        }
+
         public Level Level
         {
             get { return level; }
@@ -125,7 +137,7 @@ namespace DangerousRoads
             position.X += movement * LateralSpeed * elapsed;
             position.Y -= Speed * elapsed;
 
-            HandleCollisions();
+            HandleCollisions(previousPosition);
         }
 
         private void GetInput()
@@ -161,19 +173,39 @@ namespace DangerousRoads
 
         }
 
-        public void HandleCollisions()
+        public void HandleCollisions(Vector2 initialPosition)
         {
+            // collision with left wall ( road border )
             if ( (position.X + (texture.Width - boundingBox.Width)/2 ) < level.roadX1)
             {
-                speed = 50;
                 position.X = level.roadX1 - (texture.Width - boundingBox.Width) / 2;
             }
+
+            // collision with right wall ( road border ) 
             else if(( position.X + (texture.Width - boundingBox.Width)/2 + boundingBox.Width ) > level.roadX2 )
             {
                 position.X = level.roadX2 - ((texture.Width - boundingBox.Width)/2 + boundingBox.Width);
             }
 
-
+            // collision with other cars
+            foreach (AICar car in level.AICars)
+            {
+                int xdiff = car.BoundingRectangle.X - BoundingRectangle.X;
+                int ydiff = BoundingRectangle.Y - car.BoundingRectangle.Y;
+                if (ydiff < car.BoundingRectangle.Height)
+                {
+                    //System.Windows.Forms.MessageBox.Show("AI Car\nBB:    " + car.BoundingRectangle.ToString() +
+                    //                                             "pos:   " + car.position.ToString() +
+                    //                                   "\nPlayer\nBB:    " + BoundingRectangle.ToString() +
+                    //                                             "pos:   " + position.ToString()); 
+                    // possible collision
+                    if (BoundingRectangle.X + BoundingRectangle.Width > car.BoundingRectangle.X) // also intersecting X
+                        if (xdiff > 0) // ai car is to the right
+                        {
+                            position.X = car.BoundingRectangle.X - BoundingRectangle.Width + 1;
+                        }
+                }
+            }
         }
 
 
@@ -188,6 +220,15 @@ namespace DangerousRoads
         {
             // draw the player's car
             spriteBatch.Draw(texture, drawPosition, Color.White);
+            
+            if (level.game.showDebugInfo)
+                spriteBatch.DrawString(level.debufInfoFont,
+                    position.ToString() + "\n" + BoundingRectangle.ToString() + "\n" + drawPosition.ToString(),
+                    new Vector2(
+                        drawPosition.X + boundingBox.Width + 20,
+                        drawPosition.Y),
+                    Color.DarkGreen
+                    );
            
         }
     }

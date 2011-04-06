@@ -21,6 +21,18 @@ namespace DangerousRoads
         
         public bool isSwitchingLanes;
 
+        public Rectangle BoundingRectangle
+        {
+            get
+            {
+                int left = (int)position.X + (texture.Width  - boundingBox.Width ) / 2;
+                int top =  (int)position.Y + (texture.Height - boundingBox.Height) / 2;
+
+                return new Rectangle(left, top, boundingBox.Width,boundingBox.Height);
+            }
+        }
+
+
         public AICar( Level mlevel,Vector2 startPosition, float startSpeed )
         {
             level = mlevel;
@@ -47,12 +59,24 @@ namespace DangerousRoads
             position.Y -= this.speed * elapsed;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
+        public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition )
         {
             //global::System.Windows.Forms.MessageBox.Show("Drawing a car at " +
             //"\nX: " +drawPosition.X +
             //"\nY: " + drawPosition.Y);
             spriteBatch.Draw(texture, drawPosition, Color.White);
+           
+            if( level.game.showDebugInfo)
+            spriteBatch.DrawString(level.debufInfoFont,
+                position.ToString() + 
+                "\n" + BoundingRectangle.ToString() + 
+                "\n" + drawPosition.ToString() +
+                "\nydiff: " + (level.playerCar.Position.Y-position.Y).ToString(),
+                new Vector2( 
+                    drawPosition.X + boundingBox.Width + 20, 
+                    drawPosition.Y ), 
+                Color.DarkGreen 
+                );
         }
     }
 }
