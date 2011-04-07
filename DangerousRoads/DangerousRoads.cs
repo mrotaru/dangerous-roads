@@ -201,15 +201,6 @@ namespace DangerousRoads
 
             spriteBatch.DrawString(hudFont, level.Name, new Vector2(1.0f, 1.0f), Color.Black);
             spriteBatch.DrawString(hudFont, "Fuel: " + level.playerCar.FuelRemaining.ToString(), new Vector2(1.0f, 20.0f), Color.Black);
-            spriteBatch.DrawString(hudFont, "startY: " + level.startY + ", endY: " + level.endY, new Vector2(1.0f, 40.0f), Color.Black);
-            if (level.AICars.Count() > 0)
-            {
-                spriteBatch.DrawString(hudFont, "1st car pos: \n" + level.AICars.ElementAt(0).position.ToString() + ", velocity: " +
-                level.AICars.ElementAt(0).Velocity,
-                    new Vector2(1.0f, 60.0f), Color.Black);
-                spriteBatch.DrawString(hudFont, "Total cars: " + level.AICars.Count, new Vector2(1.0f, 100.0f), Color.Black);
-            }
-            spriteBatch.DrawString(hudFont, "Player's pos: " + level.playerCar.Position.ToString(), new Vector2(1.0f, 120.0f), Color.Black);
         }
     }
 }

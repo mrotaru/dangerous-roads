@@ -22,6 +22,7 @@ namespace DangerousRoads
         private Vector2 Fdrag;
         private Vector2 Frr;
         private Vector2 u;
+        private Vector2 Fbrake;
         private float Cdrag;
                 
         private const float MoveStickScale = 1.0f;
@@ -31,6 +32,15 @@ namespace DangerousRoads
         private float fuelConsumption = 1000;// how many milliseconds until a fuel unit is consumed
 
         public static int DrawingOffset=20;
+        public static int spinAngle;
+
+        public int Width { get { return width; } }
+        int width;   // = textureOffset.Width
+
+        public int Height { get { return height; } }
+        int height;  // = textureOffset.Height
+
+        public Rectangle textureOffset;
 
         public Level Level
         {
@@ -107,7 +117,9 @@ namespace DangerousRoads
             LoadContent();
             Speed = 200;
             mass = 1000; // kg
-            physicalBounds = new Rectangle(15, 3, 33, 57);
+            textureOffset = new Rectangle(15, 3, 33, 57);
+            width = textureOffset.Width;
+            height = textureOffset.Height;
             u.X = 0;
             u.Y = 1;
             Cdrag = 0.4257f;
@@ -156,7 +168,7 @@ namespace DangerousRoads
             float mspeed = (float)Math.Sqrt(velm.X * velm.X + velm.Y * velm.Y);
             Fdrag = -Cdrag * mspeed * velm;
             Frr = -level.RoadCrr * velm;
-            F = Ftraction + Fdrag + Frr;
+            F = Ftraction + Fdrag + Frr + Fbrake;
             Vector2 a = F / mass;
             velm = velm + elapsed*a;
             velocity = velm * DangerousRoads.pixelsPerMeter;
@@ -174,7 +186,8 @@ namespace DangerousRoads
                   "\nAcceleration: " + a.ToString() +
                   "\nVelocity:     " + velocity.ToString() +
                   "\nPosition:     " + position.ToString() +
-                  "\nEngine power: " + enginePower.ToString();
+                  "\nEngine power: " + enginePower.ToString() +
+                  "\nF_brake:      " + Fbrake.ToString();
             }
             //System.Windows.Forms.MessageBox.Show(level.debugString);
             HandleCollisions(previousPosition);
@@ -210,25 +223,38 @@ namespace DangerousRoads
                         
             // acceleration/deceleration
             if (gamePadState.IsButtonDown(Buttons.DPadUp) || keyboardState.IsKeyDown(Keys.Up))
+            {
+                Fbrake = Vector2.Zero;
                 enginePower = 5000;
+            }
             else if (gamePadState.IsButtonDown(Buttons.DPadDown) || keyboardState.IsKeyDown(Keys.Down))
-                enginePower = -15000;
-            else enginePower = 100;
+            {
+                enginePower = 1000;
+                if (velocity.Y > 0)
+                    Fbrake = new Vector2(0, -5000);
+                else
+                    Fbrake = Vector2.Zero;
+            }
+            else
+            {
+                enginePower = 100;
+                Fbrake = Vector2.Zero;
+            }
 
         }
 
         public void HandleCollisions(Vector2 initialPosition)
         {
             // collision with left wall ( road border )
-            if ( (position.X + (texture.Width - physicalBounds.Width)/2 ) < level.roadX1)
+            if ( position.X < level.roadX1)
             {
-                position.X = level.roadX1 - (texture.Width - physicalBounds.Width) / 2;
+                position.X = level.roadX1 + 1;
             }
 
             // collision with right wall ( road border ) 
-            else if(( position.X + (texture.Width - physicalBounds.Width)/2 + physicalBounds.Width ) > level.roadX2 )
+            else if( position.X + width > level.roadX2 )
             {
-                position.X = level.roadX2 - ((texture.Width - physicalBounds.Width)/2 + physicalBounds.Width);
+                position.X = level.roadX2 - width + 1;
             }
 
             // collision with other cars
@@ -255,21 +281,32 @@ namespace DangerousRoads
 
         internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Vector2 drawPosition = new Vector2(position.X + physicalBounds.Left, position.Y - level.startY - DrawingOffset - physicalBounds.Top);
-
+            //Vector2 drawPosition = new Vector2(
+            //    position.X + textureOffset.Left, 
+            //    position.Y - level.startY - DrawingOffset - textureOffset.Top);
+            
+            Vector2 drawPosition = new Vector2(
+                position.X - textureOffset.Left,
+                (-1) * (level.startY - position.Y) + textureOffset.Top);
+            
             // draw the player's car
-            spriteBatch.Draw(texture, drawPosition, Color.White);
+            if(isSpinning)
+                spriteBatch.Draw(texture, drawPosition, Color.White);
+            else
+                spriteBatch.Draw(texture, drawPosition, Color.White);
 
             if (level.game.showDebugInfo)
             {
-                spriteBatch.DrawString(level.debufInfoFont,
-                      "Pos:  " + position.X.ToString() + ", " + position.Y.ToString() +
-                    "\nDraw: " + drawPosition.X.ToString() + ", " + drawPosition.Y.ToString(),
-                    new Vector2(
-                        drawPosition.X + physicalBounds.Width + 20,
-                        drawPosition.Y),
-                    Color.LightCyan
-                    );
+                if (level.game.showDebugInfo)
+                    spriteBatch.DrawString(level.debufInfoFont,
+                          "Pos:   " + position.X.ToString() + ", " + position.Y.ToString() +
+                        "\nDraw:  " + drawPosition.X.ToString() + ", " + drawPosition.Y.ToString() + 
+                        "\nAngle: " + spinAngle,
+                        new Vector2(
+                            drawPosition.X + width + 10,
+                            drawPosition.Y),
+                        Color.LightCyan
+                        );
 
                 spriteBatch.DrawString(level.debufInfoFont,
                     "Physics\n=======\n" + level.debugString,

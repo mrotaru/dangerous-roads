@@ -62,8 +62,10 @@ namespace DangerousRoads
 
         // textures
         public Texture2D SimpleTexture;
+        public Texture2D sparkTexture;
         Texture2D roadFinish;
         Texture2D roadNoLines;
+
         public Texture2D BorderTexture
         {
             get { return borderTexture; }
@@ -121,7 +123,7 @@ namespace DangerousRoads
 
         public void Update(GameTime gameTime)
         {
-            startY = playerCar.Position.Y - (screenHeight - (playerCar.PhysicalBounds.Height + PlayerCar.DrawingOffset));
+            startY = playerCar.Position.Y - (screenHeight - (playerCar.textureOffset.Height + PlayerCar.DrawingOffset));
             endY = startY + screenHeight;
 
             // new cars ?
@@ -226,9 +228,10 @@ namespace DangerousRoads
             roadFinish = content.Load<Texture2D>("Sprites/road-finish");
             borderTexture = content.Load<Texture2D>("Sprites/road_border1");
             debufInfoFont = Content.Load<SpriteFont>("debugInfo");
+            sparkTexture = Content.Load<Texture2D>("Sprites/spark");
+
             
         }
-
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, int windowWidth, int windowHeight,GraphicsDevice GraphicsDevice)
         {
@@ -241,13 +244,14 @@ namespace DangerousRoads
                     windowHeight);
 
             // draw road texture
-            for ( int i = 0; i < destRect.Height / roadTileHeight+1; i++)
+            for ( int i = -1; i < destRect.Height / roadTileHeight+1; i++)
                 for (int j = 0; j < destRect.Width / roadTileWidth; j++)
                 {
                     Texture2D tex;
                     if (j == destRect.Width / roadTileHeight - 1) tex = roadNoLines;
                     else tex = roadTexture;
 
+                    //if (startY < 0 && startY > -100 ) tex = roadFinish;
                     spriteBatch.Draw(tex,
                                      new Rectangle(
                                          destRect.X + j * roadTileWidth,  
@@ -259,7 +263,7 @@ namespace DangerousRoads
                 }
 
             // draw road border
-            for (int i = 0; i < windowHeight / roadBorderHeight + 1; i++)
+            for (int i = -1; i < windowHeight / roadBorderHeight + 1; i++)
             {
                 // draw left border
                 spriteBatch.Draw(borderTexture,
@@ -297,9 +301,16 @@ namespace DangerousRoads
                         car.position.Y.ToString() + ", DfS: " + ( Length - car.position.Y ).ToString() + ", DfP: " + ( playerCar.Position.Y - car.position.Y + car.Height).ToString(),
                         new Vector2( 10, screenHeight - 180 + i*12),
                         Color.LightCyan);
+
                 }
             }
-            
+
+            if (game.showDebugInfo)
+            {
+                spriteBatch.DrawString(debufInfoFont, startY.ToString(), new Vector2(windowWidth - 60,                10), Color.LightCyan);
+                spriteBatch.DrawString(debufInfoFont, endY.ToString(),   new Vector2(windowWidth - 60, windowHeight - 20), Color.LightCyan);
+            }
+                        
             playerCar.Draw(gameTime, spriteBatch);
         }
     }

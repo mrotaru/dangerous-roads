@@ -26,7 +26,7 @@ namespace DangerousRoads
         Level level;
 
         int speed;
-
+        
         public Car(Level _level, Vector2 initialPosition, int initialSpeed, string textureName, Rectangle _textureOffset)
         {
             level = _level;
@@ -72,7 +72,7 @@ namespace DangerousRoads
                 return;
 
             Vector2 drawPosition = new Vector2(
-                position.X + textureOffset.Left, 
+                position.X - textureOffset.Left, 
                 (-1)*(level.startY - position.Y) + textureOffset.Top );
 
             spriteBatch.Draw(texture, drawPosition, Color.White);
