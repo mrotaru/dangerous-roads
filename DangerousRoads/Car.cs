@@ -9,10 +9,15 @@ namespace DangerousRoads
 {
     class Car
     {
-        Vector2 position;
+        public Vector2 position;
+
+        public Vector2 Velocity { get { return velocity; } }
         Vector2 velocity;
 
+        public int Width { get { return width; } }
         int width;   // = textureOffset.Width
+
+        public int Height { get { return height; } }
         int height;  // = textureOffset.Height
 
         Texture2D texture;
@@ -22,7 +27,7 @@ namespace DangerousRoads
 
         int speed;
 
-        Car(Level _level, Vector2 initialPosition, int initialSpeed, string textureName, Rectangle _textureOffset)
+        public Car(Level _level, Vector2 initialPosition, int initialSpeed, string textureName, Rectangle _textureOffset)
         {
             level = _level;
             position = initialPosition;
@@ -40,7 +45,7 @@ namespace DangerousRoads
 
         }
 
-        void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             ApplyPhysics(gameTime);
         }
@@ -58,9 +63,17 @@ namespace DangerousRoads
 
         }
 
-        internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        internal void Draw( SpriteBatch spriteBatch)
         {
-            Vector2 drawPosition = new Vector2(position.X + textureOffset.Left, level.endY - position.Y + textureOffset.Top);
+             //only draw cars that are in the currently rendered
+             //portion of the road. 
+            if (! (position.Y < level.endY  &&
+                  (level.startY - position.Y) <= height))
+                return;
+
+            Vector2 drawPosition = new Vector2(
+                position.X + textureOffset.Left, 
+                (-1)*(level.startY - position.Y) + textureOffset.Top );
 
             spriteBatch.Draw(texture, drawPosition, Color.White);
 

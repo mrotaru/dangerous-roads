@@ -185,14 +185,14 @@ namespace DangerousRoads
             }
 
             // collision with other cars
-            foreach (AICar car in level.AICars)
+            foreach (Car car in level.AICars)
             {
                 float xdiff = car.position.X - position.X;
                 float ydiff = position.Y - car.position.Y;
-                if (ydiff < car.PhysicalBounds.Height)
+                if (ydiff < car.Height)
                 {
-                    System.Windows.Forms.MessageBox.Show("AI Car pos:    " + car.position.ToString() +
-                                                       "\nPlayer pos:    " + position.ToString()); 
+                    //System.Windows.Forms.MessageBox.Show("AI Car pos:    " + car.position.ToString() +
+                    //                                   "\nPlayer pos:    " + position.ToString()); 
                     // possible collision
                 }
             }

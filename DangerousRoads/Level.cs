@@ -44,7 +44,7 @@ namespace DangerousRoads
         public int roadX1;
         public int roadX2;
 
-        public List<AICar> AICars = new List<AICar>();
+        public List<Car> AICars = new List<Car>();
         
         Rectangle RoadRect;
         // size of road texture
@@ -161,13 +161,12 @@ namespace DangerousRoads
                 // eliminate cars not in view and below
                 for (int i = 0; i < AICars.Count; i++)
                 {
-                    AICar car = AICars.ElementAt(i);
-                    if (car.position.Y <= (startY - car.boundingBox.Height) && 
-                        car.position.Y >= ( endY  + car.boundingBox.Height))
+                    Car car = AICars.ElementAt(i);
+                    if ( (car.position.Y - endY ) >= 300 )
                         AICars.Remove(car);
                 }
 
-                foreach (AICar car in AICars)
+                foreach (Car car in AICars)
                 {
                     car.Update(gameTime);
                 }
@@ -194,7 +193,8 @@ namespace DangerousRoads
             // at which speed ?
             int speed = random.Next(CarMinSpeed, CarMaxSpeed);
             
-            AICars.Add(new AICar(this, new Vector2(xpos, startY - 150), speed));
+            AICars.Add(new Car(this, new Vector2(xpos, startY - 150), speed, "Sprites/ai_car_1",
+                new Rectangle(15,3,33,57)));
 
             msSinceEval = 0;
         }
@@ -270,9 +270,20 @@ namespace DangerousRoads
             }
 
             // draw other cars
-            foreach (AICar car in AICars)
+            for (int i = 0; i < AICars.Count; i++)
             {
+                Car car = AICars.ElementAt(i);
                 car.Draw(spriteBatch);
+
+                // debug info
+                if (game.showDebugInfo)
+                {
+                    spriteBatch.DrawString(debufInfoFont,
+                        car.position.Y.ToString() + ", DfS: " + ( Length - car.position.Y ).ToString() + ", DfP: " + ( playerCar.Position.Y - car.position.Y + car.Height).ToString(),
+                        new Vector2( 5, screenHeight - 200 + i*12),
+                        Color.LightCyan);
+                }
+
             }
             
             playerCar.Draw(gameTime, spriteBatch);
