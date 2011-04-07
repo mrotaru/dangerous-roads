@@ -62,6 +62,8 @@ namespace DangerousRoads
 
         // textures
         public Texture2D SimpleTexture;
+        Texture2D roadFinish;
+        Texture2D roadNoLines;
         public Texture2D BorderTexture
         {
             get { return borderTexture; }
@@ -220,8 +222,11 @@ namespace DangerousRoads
         public void LoadContent()
         {
             roadTexture = content.Load<Texture2D>("Sprites/road1");
+            roadNoLines = content.Load<Texture2D>("Sprites/road-no_lines");
+            roadFinish = content.Load<Texture2D>("Sprites/road-finish");
             borderTexture = content.Load<Texture2D>("Sprites/road_border1");
             debufInfoFont = Content.Load<SpriteFont>("debugInfo");
+            
         }
 
 
@@ -239,7 +244,11 @@ namespace DangerousRoads
             for ( int i = 0; i < destRect.Height / roadTileHeight+1; i++)
                 for (int j = 0; j < destRect.Width / roadTileWidth; j++)
                 {
-                    spriteBatch.Draw(RoadTexture,
+                    Texture2D tex;
+                    if (j == destRect.Width / roadTileHeight - 1) tex = roadNoLines;
+                    else tex = roadTexture;
+
+                    spriteBatch.Draw(tex,
                                      new Rectangle(
                                          destRect.X + j * roadTileWidth,  
                                          destRect.Y + i * roadTileHeight - (int)(startY % roadTileHeight), 
