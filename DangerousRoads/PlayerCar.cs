@@ -10,32 +10,19 @@ namespace DangerousRoads
 {
     class PlayerCar
     {
+        // variables that control movement
         private float movement;
-
-        private const float Acceleration = 14000.0f;
-        private const float MaxSpeed = 2000.0f;
-        private const float LateralSpeed = 200.0f;
+        private float acceleration = 14000.0f;
+        private float maxSpeed = 2000.0f;
+        private float lateralSpeed = 200.0f;
         
         private const float MoveStickScale = 1.0f;
 
-        private float lastFuelUnitTime; // how many milliseconds elapsed since a fuel unit was consumed
-        float FuelConsumption = 1000;// how many milliseconds until a fuel unit is consumed
+        // fuel related variables
+        private float lastFuelUnitTime; // how many milliseconds elapsed since the last fuel unit was consumed
+        private float fuelConsumption = 1000;// how many milliseconds until a fuel unit is consumed
 
-        public bool isSpinning;
-
-
-        public int FuelRemaining;
-
-        public Rectangle BoundingRectangle
-        {
-            get
-            {
-                int left = (int)position.X + (texture.Width  - boundingBox.Width ) / 2;
-                int top =  (int)position.Y + (texture.Height - boundingBox.Height) / 2;
-
-                return new Rectangle(left, top, boundingBox.Width, boundingBox.Height);
-            }
-        }
+        public static int DrawingOffset=20;
 
         public Level Level
         {
@@ -49,19 +36,31 @@ namespace DangerousRoads
         }
         bool isAlive;
 
+        public bool IsSpinning
+        {
+            get { return isSpinning; }
+        }
+        bool isSpinning;
+
+        public int FuelRemaining
+        {
+            get { return fuelRemaining; }
+        }
+        int fuelRemaining;
+
         public int Health
         {
             get { return health; }
-            set { Health = value; }
+            set { health = value; }
         }
         int health;
         
-        public Rectangle BoundingBox
+        public Rectangle PhysicalBounds
         {
-            get { return boundingBox; }
-            set { boundingBox = value; }
+            get { return physicalBounds; }
+            set { physicalBounds = value; }
         }
-        Rectangle boundingBox;
+        Rectangle physicalBounds;
         
         // Physics state
         public Vector2 Position
@@ -96,9 +95,10 @@ namespace DangerousRoads
         {
             this.level = level;
             this.position = position;
-            FuelRemaining = level.StartFuel;
+            fuelRemaining = level.StartFuel;
             LoadContent();
             Speed = 200;
+            physicalBounds = new Rectangle(15, 3, 33, 57);
             lastFuelUnitTime = 0;
             isSpinning = false;
             isAlive = true;
@@ -107,8 +107,7 @@ namespace DangerousRoads
         public void LoadContent()
         {
             // texture
-            texture=Level.Content.Load<Texture2D>("Sprites/players_car");
-            boundingBox = new Rectangle(15, 3, 33, 57);
+            texture=level.Content.Load<Texture2D>("Sprites/players_car");
         }
 
         public void Update(GameTime gameTime)
@@ -118,9 +117,9 @@ namespace DangerousRoads
             ApplyPhysics(gameTime);
 
             // fuel consumption
-            if (lastFuelUnitTime >= FuelConsumption)
+            if (lastFuelUnitTime >= fuelConsumption)
             {
-                FuelRemaining--;
+                fuelRemaining--;
                 lastFuelUnitTime = 0.0f;
             }
             else lastFuelUnitTime += gameTime.ElapsedGameTime.Milliseconds;
@@ -134,7 +133,7 @@ namespace DangerousRoads
 
             Vector2 previousPosition = Position;
 
-            position.X += movement * LateralSpeed * elapsed;
+            position.X += movement * lateralSpeed * elapsed;
             position.Y -= Speed * elapsed;
 
             HandleCollisions(previousPosition);
@@ -152,14 +151,12 @@ namespace DangerousRoads
             // If any digital horizontal movement input is found, override the analog movement.
             // left/right movement
             if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
-                keyboardState.IsKeyDown(Keys.Left) ||
-                keyboardState.IsKeyDown(Keys.A))
+                keyboardState.IsKeyDown(Keys.Left))
             {
                 movement = -1.0f;
             }
             else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
-                     keyboardState.IsKeyDown(Keys.Right) ||
-                     keyboardState.IsKeyDown(Keys.D))
+                     keyboardState.IsKeyDown(Keys.Right))
             {
                 movement = 1.0f;
             }
@@ -176,34 +173,27 @@ namespace DangerousRoads
         public void HandleCollisions(Vector2 initialPosition)
         {
             // collision with left wall ( road border )
-            if ( (position.X + (texture.Width - boundingBox.Width)/2 ) < level.roadX1)
+            if ( (position.X + (texture.Width - physicalBounds.Width)/2 ) < level.roadX1)
             {
-                position.X = level.roadX1 - (texture.Width - boundingBox.Width) / 2;
+                position.X = level.roadX1 - (texture.Width - physicalBounds.Width) / 2;
             }
 
             // collision with right wall ( road border ) 
-            else if(( position.X + (texture.Width - boundingBox.Width)/2 + boundingBox.Width ) > level.roadX2 )
+            else if(( position.X + (texture.Width - physicalBounds.Width)/2 + physicalBounds.Width ) > level.roadX2 )
             {
-                position.X = level.roadX2 - ((texture.Width - boundingBox.Width)/2 + boundingBox.Width);
+                position.X = level.roadX2 - ((texture.Width - physicalBounds.Width)/2 + physicalBounds.Width);
             }
 
             // collision with other cars
             foreach (AICar car in level.AICars)
             {
-                int xdiff = car.BoundingRectangle.X - BoundingRectangle.X;
-                int ydiff = BoundingRectangle.Y - car.BoundingRectangle.Y;
-                if (ydiff < car.BoundingRectangle.Height)
+                float xdiff = car.position.X - position.X;
+                float ydiff = position.Y - car.position.Y;
+                if (ydiff < car.PhysicalBounds.Height)
                 {
-                    //System.Windows.Forms.MessageBox.Show("AI Car\nBB:    " + car.BoundingRectangle.ToString() +
-                    //                                             "pos:   " + car.position.ToString() +
-                    //                                   "\nPlayer\nBB:    " + BoundingRectangle.ToString() +
-                    //                                             "pos:   " + position.ToString()); 
+                    System.Windows.Forms.MessageBox.Show("AI Car pos:    " + car.position.ToString() +
+                                                       "\nPlayer pos:    " + position.ToString()); 
                     // possible collision
-                    if (BoundingRectangle.X + BoundingRectangle.Width > car.BoundingRectangle.X) // also intersecting X
-                        if (xdiff > 0) // ai car is to the right
-                        {
-                            position.X = car.BoundingRectangle.X - BoundingRectangle.Width + 1;
-                        }
                 }
             }
         }
@@ -216,18 +206,21 @@ namespace DangerousRoads
             isAlive = true;
         }
 
-        internal void Draw(GameTime gameTime, SpriteBatch spriteBatch,Vector2 drawPosition)
+        internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            Vector2 drawPosition = new Vector2(position.X + physicalBounds.Left, position.Y - level.startY - DrawingOffset - physicalBounds.Top);
+
             // draw the player's car
             spriteBatch.Draw(texture, drawPosition, Color.White);
             
             if (level.game.showDebugInfo)
                 spriteBatch.DrawString(level.debufInfoFont,
-                    position.ToString() + "\n" + BoundingRectangle.ToString() + "\n" + drawPosition.ToString(),
+                      "Pos:  " + position.X.ToString() + ", " + position.Y.ToString() +
+                    "\nDraw: " + drawPosition.X.ToString() + ", " + drawPosition.Y.ToString(),
                     new Vector2(
-                        drawPosition.X + boundingBox.Width + 20,
+                        drawPosition.X + physicalBounds.Width + 20,
                         drawPosition.Y),
-                    Color.DarkGreen
+                    Color.LightCyan
                     );
            
         }

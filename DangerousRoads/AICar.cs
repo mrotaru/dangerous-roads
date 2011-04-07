@@ -21,17 +21,15 @@ namespace DangerousRoads
         
         public bool isSwitchingLanes;
 
-        public Rectangle BoundingRectangle
+        public static int count;
+        public int number;
+
+        public Rectangle PhysicalBounds
         {
-            get
-            {
-                int left = (int)position.X + (texture.Width  - boundingBox.Width ) / 2;
-                int top =  (int)position.Y + (texture.Height - boundingBox.Height) / 2;
-
-                return new Rectangle(left, top, boundingBox.Width,boundingBox.Height);
-            }
+            get { return physicalBounds; }
+            set { physicalBounds = value; }
         }
-
+        Rectangle physicalBounds;
 
         public AICar( Level mlevel,Vector2 startPosition, float startSpeed )
         {
@@ -41,6 +39,8 @@ namespace DangerousRoads
             position = startPosition;
             speed = startSpeed;
             movement = 0;
+            count++;
+            number = count;
         }
 
         public void Update(GameTime gameTime)
@@ -59,23 +59,24 @@ namespace DangerousRoads
             position.Y -= this.speed * elapsed;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition )
+        public void Draw(SpriteBatch spriteBatch )
         {
             //global::System.Windows.Forms.MessageBox.Show("Drawing a car at " +
             //"\nX: " +drawPosition.X +
             //"\nY: " + drawPosition.Y);
-            spriteBatch.Draw(texture, drawPosition, Color.White);
+            Vector2 drawPosition = new Vector2( position.X - physicalBounds.Left, position.Y + physicalBounds.Top);
+            spriteBatch.Draw(texture,drawPosition, Color.White);
            
             if( level.game.showDebugInfo)
             spriteBatch.DrawString(level.debufInfoFont,
                 position.ToString() + 
-                "\n" + BoundingRectangle.ToString() + 
-                "\n" + drawPosition.ToString() +
+                "\n Pos:  " + position.ToString() + 
+                "\n Draw: " + drawPosition.ToString() +
                 "\nydiff: " + (level.playerCar.Position.Y-position.Y).ToString(),
                 new Vector2( 
                     drawPosition.X + boundingBox.Width + 20, 
                     drawPosition.Y ), 
-                Color.DarkGreen 
+                Color.LightCyan
                 );
         }
     }

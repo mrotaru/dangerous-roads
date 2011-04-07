@@ -34,7 +34,6 @@ namespace DangerousRoads
 
         public int screenWidth;
         public int screenHeight;
-        int playerCarDrawingOffset = 20;
         int minMsBtwEval = 200; // minimum milliseconds between evaluating chances of creating new cars
         int msSinceEval = 0;
 
@@ -107,7 +106,7 @@ namespace DangerousRoads
 
             LoadContent();
             
-            playerCar = new PlayerCar(this,new Vector2(200,Length));
+            playerCar = new PlayerCar(this,new Vector2(200,Length - PlayerCar.DrawingOffset - 70));
             ReachedFinish = false;
             roadWidth = NumberOfLanes * roadTileWidth;
             roadX1 = (windowWidth - roadWidth) / 2;
@@ -116,7 +115,7 @@ namespace DangerousRoads
 
         public void Update(GameTime gameTime)
         {
-            startY = playerCar.Position.Y - (screenHeight - (playerCar.BoundingBox.Height + playerCarDrawingOffset));
+            startY = playerCar.Position.Y - (screenHeight - (playerCar.PhysicalBounds.Height + PlayerCar.DrawingOffset));
             endY = startY + screenHeight;
 
             // new cars ?
@@ -154,8 +153,8 @@ namespace DangerousRoads
                 UpdateItems(gameTime);
 
                 // Hitting the road border while the car is spinning is fatal
-                if (playerCar.isSpinning && 
-                    (playerCar.Position.X + playerCar.BoundingBox.X) < NumberOfLanes*roadTileWidth
+                if (playerCar.IsSpinning && 
+                    (playerCar.Position.X + playerCar.PhysicalBounds.X) < NumberOfLanes*roadTileWidth
                     )
                     OnPlayerKilled();
 
@@ -273,11 +272,10 @@ namespace DangerousRoads
             // draw other cars
             foreach (AICar car in AICars)
             {
-                
-                car.Draw(spriteBatch,new Vector2(car.position.X,car.position.Y-endY));
+                car.Draw(spriteBatch);
             }
             
-            playerCar.Draw(gameTime, spriteBatch, new Vector2(playerCar.Position.X, 500));
+            playerCar.Draw(gameTime, spriteBatch);
         }
     }
 }

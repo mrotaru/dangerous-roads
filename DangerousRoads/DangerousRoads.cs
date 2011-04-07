@@ -56,7 +56,7 @@ namespace DangerousRoads
             TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / TargetFrameRate);
 
             paused = false;
-            showDebugInfo = false;
+            showDebugInfo = true;
             msPaused = 0;
         }
 
@@ -178,8 +178,6 @@ namespace DangerousRoads
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GameTime startRender;
-
             GraphicsDevice.Clear(Color.ForestGreen);
 
             spriteBatch.Begin();
@@ -210,6 +208,7 @@ namespace DangerousRoads
                     new Vector2(1.0f, 60.0f), Color.Black);
                 spriteBatch.DrawString(hudFont, "Total cars: " + level.AICars.Count, new Vector2(1.0f, 100.0f), Color.Black);
             }
+            spriteBatch.DrawString(hudFont, "Player's pos: " + level.playerCar.Position.ToString(), new Vector2(1.0f, 120.0f), Color.Black);
         }
     }
 }
