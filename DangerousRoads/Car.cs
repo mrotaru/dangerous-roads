@@ -82,7 +82,7 @@ namespace DangerousRoads
                       "Pos:  " + position.X.ToString() + ", " + position.Y.ToString() +
                     "\nDraw: " + drawPosition.X.ToString() + ", " + drawPosition.Y.ToString(),
                     new Vector2(
-                        drawPosition.X + width + 20,
+                        drawPosition.X + width + 10,
                         drawPosition.Y),
                     Color.LightCyan
                     );

@@ -20,9 +20,10 @@ namespace DangerousRoads
     public class DangerousRoads : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public SpriteBatch spriteBatch;
 
         // global game variables
+        public const int pixelsPerMeter = 40;
  
         Level level;
         int currentLevel;

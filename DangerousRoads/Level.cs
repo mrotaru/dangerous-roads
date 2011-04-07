@@ -12,7 +12,7 @@ namespace DangerousRoads
 {
     class Level
     {
-
+        // these are loaded from XML files
         public String Name;
         public int NumberOfLanes;
         public float Length;
@@ -25,12 +25,15 @@ namespace DangerousRoads
         public int OilLeakProbability;
         public int RoadBlockProbability;
         public int TruckProbability;
+        public float RoadCrr;
 
         public bool ReachedFinish;
+        public string debugString;
 
         public DangerousRoads game;
 
         public SpriteFont debufInfoFont;
+        public SpriteBatch _spriteBatch;
 
         public int screenWidth;
         public int screenHeight;
@@ -93,7 +96,7 @@ namespace DangerousRoads
             
             Name = levelData.Name;
             NumberOfLanes = levelData.NumberOfLanes;
-            Length = levelData.Length*25*1000;
+            Length = levelData.Length*40*1000;
             Speed = levelData.Speed;
             StartFuel = levelData.StartFuel;
             CarProbability = levelData.CarProbability;
@@ -103,6 +106,7 @@ namespace DangerousRoads
             OilLeakProbability = levelData.OilLeakProbability;
             RoadBlockProbability = levelData.RoadBlockProbability;
             TruckProbability = levelData.TruckProbability;
+            RoadCrr = levelData.RoadCrr;
 
             LoadContent();
             
@@ -270,6 +274,8 @@ namespace DangerousRoads
             }
 
             // draw other cars
+            if (game.showDebugInfo)
+                spriteBatch.DrawString(debufInfoFont, "AI Cars\n", new Vector2(10, screenHeight- 200), Color.LightCyan);
             for (int i = 0; i < AICars.Count; i++)
             {
                 Car car = AICars.ElementAt(i);
@@ -280,10 +286,9 @@ namespace DangerousRoads
                 {
                     spriteBatch.DrawString(debufInfoFont,
                         car.position.Y.ToString() + ", DfS: " + ( Length - car.position.Y ).ToString() + ", DfP: " + ( playerCar.Position.Y - car.position.Y + car.Height).ToString(),
-                        new Vector2( 5, screenHeight - 200 + i*12),
+                        new Vector2( 10, screenHeight - 180 + i*12),
                         Color.LightCyan);
                 }
-
             }
             
             playerCar.Draw(gameTime, spriteBatch);

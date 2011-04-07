@@ -13,5 +13,6 @@
         <OilLeakProbability>10</OilLeakProbability>
         <RoadBlockProbability>5</RoadBlockProbability>
         <TruckProbability>10</TruckProbability>
+        <RoadCrr>12.8</RoadCrr>
     </Asset>
 </XnaContent>

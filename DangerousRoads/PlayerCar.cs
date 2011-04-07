@@ -12,10 +12,18 @@ namespace DangerousRoads
     {
         // variables that control movement
         private float movement;
-        private float acceleration = 14000.0f;
-        private float maxSpeed = 2000.0f;
+        private float mass;
         private float lateralSpeed = 200.0f;
-        
+
+        // physics
+        private float enginePower;
+        private Vector2 F;
+        private Vector2 Ftraction;
+        private Vector2 Fdrag;
+        private Vector2 Frr;
+        private Vector2 u;
+        private float Cdrag;
+                
         private const float MoveStickScale = 1.0f;
 
         // fuel related variables
@@ -98,8 +106,13 @@ namespace DangerousRoads
             fuelRemaining = level.StartFuel;
             LoadContent();
             Speed = 200;
+            mass = 1000; // kg
             physicalBounds = new Rectangle(15, 3, 33, 57);
+            u.X = 0;
+            u.Y = 1;
+            Cdrag = 0.4257f;
             lastFuelUnitTime = 0;
+            enginePower = 1000;
             isSpinning = false;
             isAlive = true;
         }
@@ -133,9 +146,37 @@ namespace DangerousRoads
 
             Vector2 previousPosition = Position;
 
-            position.X += movement * lateralSpeed * elapsed;
-            position.Y -= Speed * elapsed;
+            //position.X += movement * lateralSpeed * elapsed;
+            //position.Y -= Speed * elapsed;
 
+            // compute physics
+            Ftraction = u * enginePower;
+            // velocity, in m/s
+            Vector2 velm = velocity / DangerousRoads.pixelsPerMeter;
+            float mspeed = (float)Math.Sqrt(velm.X * velm.X + velm.Y * velm.Y);
+            Fdrag = -Cdrag * mspeed * velm;
+            Frr = -level.RoadCrr * velm;
+            F = Ftraction + Fdrag + Frr;
+            Vector2 a = F / mass;
+            velm = velm + elapsed*a;
+            velocity = velm * DangerousRoads.pixelsPerMeter;
+            position = position - elapsed * velocity;
+
+            // display debug info
+            if (level.game.showDebugInfo)
+            {
+                level.debugString =
+                    "F_traction:   " + Ftraction.ToString() +
+                  "\nmspeed:       " + mspeed.ToString() +
+                  "\nF_drag:       " + Fdrag.ToString() +
+                  "\nFrr:          " + Frr.ToString() +
+                  "\nF:            " + F.ToString() +
+                  "\nAcceleration: " + a.ToString() +
+                  "\nVelocity:     " + velocity.ToString() +
+                  "\nPosition:     " + position.ToString() +
+                  "\nEngine power: " + enginePower.ToString();
+            }
+            //System.Windows.Forms.MessageBox.Show(level.debugString);
             HandleCollisions(previousPosition);
         }
 
@@ -163,10 +204,10 @@ namespace DangerousRoads
             
             // acceleration/deceleration
             if (gamePadState.IsButtonDown(Buttons.DPadUp) || keyboardState.IsKeyDown(Keys.Up))
-                Speed = 400;
+                enginePower = 5000;
             else if (gamePadState.IsButtonDown(Buttons.DPadDown) || keyboardState.IsKeyDown(Keys.Down))
-                Speed = 100;
-            else Speed = 200;
+                enginePower = -15000;
+            else enginePower = 100;
 
         }
 
@@ -212,8 +253,9 @@ namespace DangerousRoads
 
             // draw the player's car
             spriteBatch.Draw(texture, drawPosition, Color.White);
-            
+
             if (level.game.showDebugInfo)
+            {
                 spriteBatch.DrawString(level.debufInfoFont,
                       "Pos:  " + position.X.ToString() + ", " + position.Y.ToString() +
                     "\nDraw: " + drawPosition.X.ToString() + ", " + drawPosition.Y.ToString(),
@@ -222,6 +264,15 @@ namespace DangerousRoads
                         drawPosition.Y),
                     Color.LightCyan
                     );
+
+                spriteBatch.DrawString(level.debufInfoFont,
+                    "Physics\n=======\n" + level.debugString,
+                    new Vector2(
+                        10,
+                        200),
+                        Color.LightYellow);
+            }
+ 
            
         }
     }

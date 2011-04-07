@@ -27,5 +27,6 @@ namespace LevelDataLibrary
        public int OilLeakProbability;
        public int RoadBlockProbability;
        public int TruckProbability;
+       public float RoadCrr;
     }
 }
