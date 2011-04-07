@@ -194,14 +194,20 @@ namespace DangerousRoads
             if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 keyboardState.IsKeyDown(Keys.Left))
             {
-                movement = -1.0f;
+                if (keyboardState.IsKeyDown(Keys.RightShift) || keyboardState.IsKeyDown(Keys.LeftShift))
+                    position.X -= 1.0f;
+                else
+                    position.X -= 3.0f;
             }
             else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
                      keyboardState.IsKeyDown(Keys.Right))
             {
-                movement = 1.0f;
+                if (keyboardState.IsKeyDown(Keys.RightShift) || keyboardState.IsKeyDown(Keys.LeftShift))
+                    position.X += 1.0f;
+                else
+                    position.X += 3.0f;
             }
-            
+                        
             // acceleration/deceleration
             if (gamePadState.IsButtonDown(Buttons.DPadUp) || keyboardState.IsKeyDown(Keys.Up))
                 enginePower = 5000;
