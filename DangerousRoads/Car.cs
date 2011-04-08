@@ -32,6 +32,7 @@ namespace DangerousRoads
             level = _level;
             position = initialPosition;
             speed = initialSpeed;
+            velocity = new Vector2(0, initialSpeed);
             textureOffset = _textureOffset;
             width = textureOffset.Width;
             height = textureOffset.Height;

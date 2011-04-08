@@ -13,7 +13,6 @@ namespace DangerousRoads
         // variables that control movement
         private float movement;
         private float mass;
-        private float lateralSpeed = 200.0f;
 
         // physics
         private float enginePower;
@@ -39,6 +38,9 @@ namespace DangerousRoads
 
         public int Height { get { return height; } }
         int height;  // = textureOffset.Height
+
+        public float X { get { return position.X; } }
+        public float Y { get { return position.Y; } }
 
         public Rectangle textureOffset;
 
@@ -137,7 +139,10 @@ namespace DangerousRoads
 
         public void Update(GameTime gameTime)
         {
+            Vector2 ip = position;
+
             GetInput();
+            HandleCollisions(ip);
 
             ApplyPhysics(gameTime);
 
@@ -225,7 +230,8 @@ namespace DangerousRoads
             if (gamePadState.IsButtonDown(Buttons.DPadUp) || keyboardState.IsKeyDown(Keys.Up))
             {
                 Fbrake = Vector2.Zero;
-                enginePower = 5000;
+                if (fuelRemaining > 0) enginePower = 5000;
+                else enginePower = 0;
             }
             else if (gamePadState.IsButtonDown(Buttons.DPadDown) || keyboardState.IsKeyDown(Keys.Down))
             {
@@ -237,7 +243,8 @@ namespace DangerousRoads
             }
             else
             {
-                enginePower = 100;
+                if (fuelRemaining > 0) enginePower = 100;
+                else enginePower = 0;
                 Fbrake = Vector2.Zero;
             }
 
@@ -268,6 +275,8 @@ namespace DangerousRoads
                      position.Y + height >= car.position.Y
                     )
                 {
+                    position = initialPosition;
+                    velocity = car.Velocity;
                     
                     {
                         level.debugString += ("\ndiff_X: " + diffx.ToString() +

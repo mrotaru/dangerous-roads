@@ -139,13 +139,7 @@ namespace DangerousRoads
             }
             else msSinceEval += gameTime.ElapsedGameTime.Milliseconds;
             
-            // Pause while the player is dead or time is expired.
-            if (!playerCar.IsAlive || playerCar.FuelRemaining == 0)
-            {
-                // Still want to perform physics on the player.
-                playerCar.ApplyPhysics(gameTime);
-            }
-            else if (ReachedFinish)
+            if (ReachedFinish)
             {
                 // Animate the time being converted into points.
                 //int seconds = (int)Math.Round(gameTime.ElapsedGameTime.TotalSeconds * 100.0f);
