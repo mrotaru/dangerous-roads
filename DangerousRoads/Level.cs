@@ -273,7 +273,7 @@ namespace DangerousRoads
                 {             
                     Texture2D tex;
                     if (j == destRect.Width / roadTileHeight - 1 ) tex = roadNoLines;
-                    tex = roadTexture;
+                    else tex = roadTexture;
 
                     //if (startY < 0 && startY > -100 ) tex = roadFinish;
                     spriteBatch.Draw(tex,
