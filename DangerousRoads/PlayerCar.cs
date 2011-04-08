@@ -169,9 +169,6 @@ namespace DangerousRoads
 
             Vector2 previousPosition = Position;
 
-            //position.X += movement * lateralSpeed * elapsed;
-            //position.Y -= Speed * elapsed;
-
             // compute physics
             Ftraction = u * enginePower;
             // velocity, in m/s
@@ -213,7 +210,6 @@ namespace DangerousRoads
             // Get analog horizontal movement.
             movement = gamePadState.ThumbSticks.Left.X * MoveStickScale;
 
-            // If any digital horizontal movement input is found, override the analog movement.
             // left/right movement
             if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 keyboardState.IsKeyDown(Keys.Left))

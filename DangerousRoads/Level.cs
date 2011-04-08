@@ -128,11 +128,11 @@ namespace DangerousRoads
 
             LoadContent();
             
-            playerCar = new PlayerCar(this,new Vector2(200,Length - PlayerCar.DrawingOffset - 70));
             ReachedFinish = false;
             roadWidth = NumberOfLanes * roadTileWidth;
             roadX1 = (windowWidth - roadWidth) / 2;
             roadX2 = roadX1 + roadWidth;
+            playerCar = new PlayerCar(this, new Vector2( roadX1 + roadWidth/2, Length - PlayerCar.DrawingOffset - 70));
         }
 
         public void Update(GameTime gameTime)
@@ -218,7 +218,7 @@ namespace DangerousRoads
             int road_width = NumberOfLanes * roadTileWidth;
             int ftWidth = fuelTexture.Width;
             int lane = random.Next(1, NumberOfLanes);
-            int xpos = (screenWidth - road_width) / 2 + (lane - 1) * roadTileWidth + (roadTileWidth - ftWidth) / 2;
+            int xpos = roadX1 + (lane - 1) * roadTileWidth + (roadTileWidth - ftWidth) / 2;
             FuelItems.Add(new Vector2(xpos, startY - 150));            
             msSinceEval = 0;
         }
@@ -235,13 +235,13 @@ namespace DangerousRoads
 
         public void OnPlayerKilled()
         {
-            System.Windows.Forms.MessageBox.Show("Your car is damaged beyound repair,\n you lose.");
+            System.Windows.Forms.MessageBox.Show("Your car is damaged beyound repair,\nand you fail to reach the destination.");
             game.Exit();
         }
 
         public void OnPlayerOutOfFuel()
         {
-            System.Windows.Forms.MessageBox.Show("Your run out of fuel,\n you lose.");
+            System.Windows.Forms.MessageBox.Show("Your run out of fuel,\nand failed to reach the destination.");
             game.Exit();
         }
 
