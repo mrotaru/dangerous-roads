@@ -218,7 +218,7 @@ namespace DangerousRoads
             int road_width = NumberOfLanes * roadTileWidth;
             int ftWidth = fuelTexture.Width;
             int lane = random.Next(1, NumberOfLanes);
-            int xpos = (screenWidth - road_width) / 2 + (lane - 1) * ftWidth + (roadTileWidth - ftWidth) / 2;
+            int xpos = (screenWidth - road_width) / 2 + (lane - 1) * roadTileWidth + (roadTileWidth - ftWidth) / 2;
             FuelItems.Add(new Vector2(xpos, startY - 150));            
             msSinceEval = 0;
         }

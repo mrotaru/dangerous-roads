@@ -11,7 +11,7 @@
         <CarMinSpeed>140</CarMinSpeed>
         <CarMaxSpeed>270</CarMaxSpeed>
         <OilLeakProbability>10</OilLeakProbability>
-        <FuelProbability>20</FuelProbability>
+        <FuelProbability>8</FuelProbability>
         <RoadBlockProbability>5</RoadBlockProbability>
         <TruckProbability>10</TruckProbability>
         <RoadCrr>12.8</RoadCrr>

@@ -3,7 +3,7 @@
     <Asset Type="LevelDataLibrary.LevelData">
       <Name>Level 1</Name>
         <NumberOfLanes>6</NumberOfLanes>
-        <Length>0.1</Length>
+        <Length>0.4</Length>
         <Speed>60</Speed>
         <StartFuel>20</StartFuel>
         <CarProbability>20</CarProbability>
@@ -11,7 +11,7 @@
         <CarMinSpeed>120</CarMinSpeed>
         <CarMaxSpeed>240</CarMaxSpeed>
         <OilLeakProbability>10</OilLeakProbability>
-        <FuelProbability>20</FuelProbability>
+        <FuelProbability>10</FuelProbability>
         <RoadBlockProbability>5</RoadBlockProbability>
         <TruckProbability>10</TruckProbability>
         <RoadCrr>12.8</RoadCrr>
