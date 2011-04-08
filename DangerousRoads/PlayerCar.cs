@@ -260,13 +260,20 @@ namespace DangerousRoads
             // collision with other cars
             foreach (Car car in level.AICars)
             {
-                float xdiff = car.position.X - position.X;
-                float ydiff = position.Y - car.position.Y;
-                if (ydiff < car.Height)
+                float diffx = ( position.X + width ) - car.position.X;
+                float diffy = position.Y - ( car.position.Y + car.Height );
+                if ( position.X + width >= car.position.X &&
+                     position.X < car.position.X + car.Width &&
+                     position.Y < car.position.Y + car.Height &&
+                     position.Y + height >= car.position.Y
+                    )
                 {
-                    //System.Windows.Forms.MessageBox.Show("AI Car pos:    " + car.position.ToString() +
-                    //                                   "\nPlayer pos:    " + position.ToString()); 
-                    // possible collision
+                    
+                    {
+                        level.debugString += ("\ndiff_X: " + diffx.ToString() +
+                                          "\ndiff_Y: " + diffy.ToString());
+                    }
+
                 }
             }
         }
@@ -312,7 +319,7 @@ namespace DangerousRoads
                     "Physics\n=======\n" + level.debugString,
                     new Vector2(
                         10,
-                        200),
+                        100),
                         Color.LightYellow);
             }
  
