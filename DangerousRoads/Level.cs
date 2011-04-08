@@ -138,7 +138,11 @@ namespace DangerousRoads
                 msSinceEval = 0;
             }
             else msSinceEval += gameTime.ElapsedGameTime.Milliseconds;
-            
+
+
+            if (playerCar.FuelRemaining <= 0)
+                RoadCrr = 500;
+
             if (ReachedFinish)
             {
                 // Animate the time being converted into points.

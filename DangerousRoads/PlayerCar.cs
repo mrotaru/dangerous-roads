@@ -149,7 +149,7 @@ namespace DangerousRoads
             // fuel consumption
             if (lastFuelUnitTime >= fuelConsumption)
             {
-                fuelRemaining--;
+                if(fuelRemaining > 0 ) fuelRemaining--;
                 lastFuelUnitTime = 0.0f;
             }
             else lastFuelUnitTime += gameTime.ElapsedGameTime.Milliseconds;
