@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <XnaContent>
     <Asset Type="LevelDataLibrary.LevelData">
-      <Name>Level 1</Name>
-        <NumberOfLanes>6</NumberOfLanes>
-        <Length>0.3</Length>
+      <Name>Level 3</Name>
+        <NumberOfLanes>4</NumberOfLanes>
+        <Length>0.9</Length>
         <Speed>60</Speed>
-        <StartFuel>20</StartFuel>
-        <CarProbability>20</CarProbability>
+        <StartFuel>40</StartFuel>
+        <CarProbability>35</CarProbability>
         <CarSwitchLanesProbability>10</CarSwitchLanesProbability>
-        <CarMinSpeed>120</CarMinSpeed>
-        <CarMaxSpeed>240</CarMaxSpeed>
+        <CarMinSpeed>160</CarMinSpeed>
+        <CarMaxSpeed>280</CarMaxSpeed>
         <OilLeakProbability>10</OilLeakProbability>
         <RoadBlockProbability>5</RoadBlockProbability>
         <TruckProbability>10</TruckProbability>

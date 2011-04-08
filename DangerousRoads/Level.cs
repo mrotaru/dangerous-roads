@@ -141,20 +141,20 @@ namespace DangerousRoads
 
 
             if (playerCar.FuelRemaining <= 0)
-                RoadCrr = 500;
+                RoadCrr = 1000;
 
-            if (ReachedFinish)
+            if (playerCar.Position.Y <= 0)
             {
                 // Animate the time being converted into points.
                 //int seconds = (int)Math.Round(gameTime.ElapsedGameTime.TotalSeconds * 100.0f);
                 //seconds = Math.Min(seconds, (int)Math.Ceiling(TimeRemaining.TotalSeconds));
                 //timeRemaining -= TimeSpan.FromSeconds(seconds);
                 //score += seconds * PointsPerSecond;
+                game.LoadNextLevel();
             }
             else
             {
                 playerCar.Update(gameTime);
-
 
                 UpdateItems(gameTime);
 
@@ -212,11 +212,19 @@ namespace DangerousRoads
 
         private void OnExitReached()
         {
-            //throw new NotImplementedException();
+            game.LoadNextLevel();
         }
 
-        private void OnPlayerKilled()
+        public void OnPlayerKilled()
         {
+            System.Windows.Forms.MessageBox.Show("Your car is damaged beyound repair,\n you lose.");
+            game.Exit();
+        }
+
+        public void OnPlayerOutOfFuel()
+        {
+            System.Windows.Forms.MessageBox.Show("Your run out of fuel,\n you lose.");
+            game.Exit();
         }
 
         public void LoadContent()

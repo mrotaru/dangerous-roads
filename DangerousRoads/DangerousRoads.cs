@@ -73,7 +73,7 @@ namespace DangerousRoads
             windowWidth = GraphicsDevice.Viewport.Width;
             
             currentLevel = 0;
-            totalLevels = 1;
+            totalLevels = 3;
             
             LoadNextLevel();
             
@@ -97,10 +97,13 @@ namespace DangerousRoads
             // textures - loaded by the Level's 'LoadContent'
         }
 
-        private void LoadNextLevel()
+        public void LoadNextLevel()
         {
             if (currentLevel == totalLevels)
-                return;
+            {
+                System.Windows.Forms.MessageBox.Show("Congratulations !\nYou have successfully completed the game.");
+                Exit();
+            }
             else
             {
                 // 'Level complete' screen, if != 1

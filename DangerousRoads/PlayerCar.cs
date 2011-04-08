@@ -106,8 +106,12 @@ namespace DangerousRoads
 
         public float Speed
         {
-            get { return speed; }
-            set { speed = value; }
+            get 
+            {
+                Vector2 velm = velocity / DangerousRoads.pixelsPerMeter;
+                float mspeed = (float)Math.Sqrt(velm.X * velm.X + velm.Y * velm.Y);
+                return mspeed; 
+            }
         }
         float speed;
 
@@ -117,7 +121,6 @@ namespace DangerousRoads
             this.position = position;
             fuelRemaining = level.StartFuel;
             LoadContent();
-            Speed = 200;
             mass = 1000; // kg
             textureOffset = new Rectangle(15, 3, 33, 57);
             width = textureOffset.Width;
@@ -149,7 +152,10 @@ namespace DangerousRoads
             // fuel consumption
             if (lastFuelUnitTime >= fuelConsumption)
             {
-                if(fuelRemaining > 0 ) fuelRemaining--;
+                if (fuelRemaining > 0)
+                    fuelRemaining--;
+                else if (Speed < 0.4)
+                    level.OnPlayerOutOfFuel();
                 lastFuelUnitTime = 0.0f;
             }
             else lastFuelUnitTime += gameTime.ElapsedGameTime.Milliseconds;
