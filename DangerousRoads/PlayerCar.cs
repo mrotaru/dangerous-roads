@@ -291,6 +291,22 @@ namespace DangerousRoads
 
                 }
             }
+
+            // collision with items, such as fuel cells
+            for( int i = 0; i<level.FuelItems.Count; i++ )
+            {
+                Vector2 fi = level.FuelItems.ElementAt(i);
+                if (position.X + width >= fi.X &&
+                     position.X < fi.X + level.fuelTexture.Width &&
+                     position.Y < fi.Y + level.fuelTexture.Height &&
+                     position.Y + height >= fi.Y
+                    )
+                {
+                    level.FuelItems.Remove(fi);
+                    fuelRemaining += 5;
+                }
+
+            }
         }
 
 

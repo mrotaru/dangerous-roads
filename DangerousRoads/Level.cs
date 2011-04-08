@@ -23,6 +23,7 @@ namespace DangerousRoads
         public int CarMinSpeed;
         public int CarMaxSpeed;
         public int OilLeakProbability;
+        public int FuelProbability;
         public int RoadBlockProbability;
         public int TruckProbability;
         public float RoadCrr;
@@ -39,6 +40,7 @@ namespace DangerousRoads
         public int screenHeight;
         int minMsBtwEval = 200; // minimum milliseconds between evaluating chances of creating new cars
         int msSinceEval = 0;
+        int msSinceFuelEval = 0;
 
         // portion of the road currently being rendered
         public float startY;
@@ -48,6 +50,7 @@ namespace DangerousRoads
         public int roadX2;
 
         public List<Car> AICars = new List<Car>();
+        public List<Vector2> FuelItems = new List<Vector2>();
         
         Rectangle RoadRect;
         // size of road texture
@@ -58,13 +61,18 @@ namespace DangerousRoads
         int roadBorderWidth = 50;
         int roadBorderHeight = 100;
 
-        private Random random = new Random(354668); // Arbitrary, but constant seed
+        
+        TimeSpan t;
+        int timestamp;
+        private Random random;
 
         // textures
         public Texture2D SimpleTexture;
         public Texture2D sparkTexture;
         Texture2D roadFinish;
         Texture2D roadNoLines;
+        Texture2D finishLine;
+        public Texture2D fuelTexture;
 
         public Texture2D BorderTexture
         {
@@ -96,6 +104,11 @@ namespace DangerousRoads
             screenWidth = windowWidth;
             screenHeight = windowHeight;
 
+            t = (DateTime.UtcNow - new DateTime(1970, 1, 1));
+            timestamp = (int) t.TotalSeconds;
+            random = new Random(timestamp); // Arbitrary, but constant seed
+
+
             LevelData levelData = content.Load<LevelData>( String.Format("Levels/Level_{0}", level_number));
             
             Name = levelData.Name;
@@ -108,6 +121,7 @@ namespace DangerousRoads
             CarMinSpeed = levelData.CarMinSpeed;
             CarMaxSpeed = levelData.CarMaxSpeed;
             OilLeakProbability = levelData.OilLeakProbability;
+            FuelProbability = levelData.FuelProbability;
             RoadBlockProbability = levelData.RoadBlockProbability;
             TruckProbability = levelData.TruckProbability;
             RoadCrr = levelData.RoadCrr;
@@ -126,19 +140,21 @@ namespace DangerousRoads
             startY = playerCar.Position.Y - (screenHeight - (playerCar.textureOffset.Height + PlayerCar.DrawingOffset));
             endY = startY + screenHeight;
 
-            // new cars ?
+
             int r = (int)startY % 100;
-            
-            if ( r <= 10 && msSinceEval > minMsBtwEval)
+            if (r <= 10 && msSinceEval > minMsBtwEval)
             {
-                //System.Windows.Forms.MessageBox.Show(r.ToString() + " " + msSinceEval.ToString());
+                // new cars ?
                 int k = random.Next(1, 100);
                 if (k <= CarProbability)
                     CreateCar();
+                // new items ?
+                k = random.Next(1, 100);
+                if (k <= FuelProbability)
+                    CreateFuelItem();
                 msSinceEval = 0;
             }
             else msSinceEval += gameTime.ElapsedGameTime.Milliseconds;
-
 
             if (playerCar.FuelRemaining <= 0)
                 RoadCrr = 1000;
@@ -159,8 +175,8 @@ namespace DangerousRoads
                 UpdateItems(gameTime);
 
                 // Hitting the road border while the car is spinning is fatal
-                if (playerCar.IsSpinning && 
-                    (playerCar.Position.X + playerCar.PhysicalBounds.X) < NumberOfLanes*roadTileWidth
+                if (playerCar.IsSpinning &&
+                    (playerCar.Position.X + playerCar.PhysicalBounds.X) < NumberOfLanes * roadTileWidth
                     )
                     OnPlayerKilled();
 
@@ -168,22 +184,13 @@ namespace DangerousRoads
                 for (int i = 0; i < AICars.Count; i++)
                 {
                     Car car = AICars.ElementAt(i);
-                    if ( (car.position.Y - endY ) >= 300 )
+                    if ((car.position.Y - endY) >= 300)
                         AICars.Remove(car);
                 }
 
                 foreach (Car car in AICars)
                 {
                     car.Update(gameTime);
-                }
-
-                // The player has reached the exit if they are standing on the ground and
-                // his bounding rectangle contains the center of the exit tile. They can only
-                // exit when they have collected all of the gems.
-                if (playerCar.IsAlive &&
-                    playerCar.Position.Y >= Length)
-                {
-                    OnExitReached();
                 }
             }
         }
@@ -202,6 +209,17 @@ namespace DangerousRoads
             AICars.Add(new Car(this, new Vector2(xpos, startY - 150), speed, "Sprites/ai_car_1",
                 new Rectangle(15,3,33,57)));
 
+            msSinceEval = 0;
+        }
+
+        private void CreateFuelItem()
+        {
+            // on which lane ?
+            int road_width = NumberOfLanes * roadTileWidth;
+            int ftWidth = fuelTexture.Width;
+            int lane = random.Next(1, NumberOfLanes);
+            int xpos = (screenWidth - road_width) / 2 + (lane - 1) * ftWidth + (roadTileWidth - ftWidth) / 2;
+            FuelItems.Add(new Vector2(xpos, startY - 150));            
             msSinceEval = 0;
         }
 
@@ -235,9 +253,9 @@ namespace DangerousRoads
             borderTexture = content.Load<Texture2D>("Sprites/road_border1");
             debufInfoFont = Content.Load<SpriteFont>("debugInfo");
             sparkTexture = Content.Load<Texture2D>("Sprites/spark");
-
-            
-        }
+            finishLine = Content.Load<Texture2D>("Sprites/finish_line");
+            fuelTexture = Content.Load<Texture2D>("Sprites/fuel");
+         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, int windowWidth, int windowHeight,GraphicsDevice GraphicsDevice)
         {
@@ -252,10 +270,10 @@ namespace DangerousRoads
             // draw road texture
             for ( int i = -1; i < destRect.Height / roadTileHeight+1; i++)
                 for (int j = 0; j < destRect.Width / roadTileWidth; j++)
-                {
+                {             
                     Texture2D tex;
-                    if (j == destRect.Width / roadTileHeight - 1) tex = roadNoLines;
-                    else tex = roadTexture;
+                    if (j == destRect.Width / roadTileHeight - 1 ) tex = roadNoLines;
+                    tex = roadTexture;
 
                     //if (startY < 0 && startY > -100 ) tex = roadFinish;
                     spriteBatch.Draw(tex,
@@ -267,6 +285,18 @@ namespace DangerousRoads
                                          ),
                                      Color.White);
                 }
+
+            // finish line
+            if (startY <= 0 && endY >= 0)
+                for (int j = 0; j < destRect.Width / finishLine.Width; j++)
+                    spriteBatch.Draw(finishLine,
+                        new Rectangle(
+                            destRect.X + j * finishLine.Width,
+                            screenHeight - (int)Math.Abs(endY),
+                            finishLine.Width,
+                            finishLine.Height
+                            ),
+                            Color.White);
 
             // draw road border
             for (int i = -1; i < windowHeight / roadBorderHeight + 1; i++)
@@ -290,6 +320,20 @@ namespace DangerousRoads
                      roadBorderHeight
                      ),
                  Color.White);
+            }
+
+            // draw items
+            for (int i = 0; i < FuelItems.Count; i++)
+            {
+                Vector2 fi = FuelItems.ElementAt(i);
+                if (fi.Y < endY && (startY - fi.Y) <= 40)
+                {
+                    Vector2 drawPosition = new Vector2(
+                    fi.X - 5,
+                    (-1) * ( startY - fi.Y) + 5);
+
+                    spriteBatch.Draw(fuelTexture, drawPosition, Color.White);
+                }
             }
 
             // draw other cars

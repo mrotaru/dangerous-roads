@@ -25,6 +25,7 @@ namespace LevelDataLibrary
        public int CarMinSpeed;
        public int CarMaxSpeed;
        public int OilLeakProbability;
+       public int FuelProbability;
        public int RoadBlockProbability;
        public int TruckProbability;
        public float RoadCrr;
