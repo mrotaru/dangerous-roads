@@ -206,7 +206,7 @@ namespace DangerousRoads
             // at which speed ?
             int speed = random.Next(CarMinSpeed, CarMaxSpeed);
             
-            AICars.Add(new Car(this, new Vector2(xpos, startY - 150), speed, "Sprites/ai_car_1",
+            AICars.Add(new Car(this, new Vector2(xpos, startY - 150), speed, String.Format("Sprites/ai_car_{0}", random.Next(1,5)),
                 new Rectangle(15,3,33,57)));
 
             msSinceEval = 0;

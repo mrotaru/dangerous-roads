@@ -57,7 +57,7 @@ namespace DangerousRoads
             TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / TargetFrameRate);
 
             paused = false;
-            showDebugInfo = true;
+            showDebugInfo = false;
             msPaused = 0;
         }
 
@@ -203,7 +203,10 @@ namespace DangerousRoads
                                          titleSafeArea.Y + titleSafeArea.Height / 2.0f);
 
             spriteBatch.DrawString(hudFont, level.Name, new Vector2(1.0f, 1.0f), Color.Black);
-            spriteBatch.DrawString(hudFont, "Fuel: " + level.playerCar.FuelRemaining.ToString(), new Vector2(1.0f, 20.0f), Color.Black);
+            spriteBatch.Draw(level.fuelTexture,
+                new Rectangle( 10, 23, (int)(level.fuelTexture.Width * 0.6), (int)(level.fuelTexture.Height * 0.6)), Color.White); 
+            spriteBatch.DrawString(hudFont, level.playerCar.FuelRemaining.ToString(), new Vector2(30.0f, 20.0f), Color.Black);
+            spriteBatch.DrawString(hudFont, "Distance to destination: " + ((int)(level.playerCar.Position.Y)/40 + 1).ToString() + "m", new Vector2(1.0f, 40.0f), Color.Black);
         }
     }
 }
